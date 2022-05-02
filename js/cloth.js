@@ -186,7 +186,7 @@ function Cloth(w, h, l) {
           new Constraint(particles[index(u, v)], particles[index(u + 1, v)], this.restDistance)
         );
       }
-      if ()
+      
     }
   }
 

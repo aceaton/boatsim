@@ -67,23 +67,21 @@ Sim.pinCloth = function(choice) {
 }
 
 Sim.enforcePinConstraints = function() {
-  // TODO: pin the main sail head and all points down the luff to the mast! 
-  // nah do this in the other one
-
+  // pin the main sail head and all points down the luff to the mast! 
   let particles = cloth.particles;
-  const w = cloth.w;
-  const h = cloth.h;
-
   if (SceneParams.pinned === "Classic") {
-
-  for (let i = 0; i <= particles.length; i++) {
-
+  for (let i = 0; i <= d; i++) {
+    particles[cloth.index(0, i)].lockToOriginal();
    }
-
+  // pin the clew to boom end 
+  particles[cloth.index(d, d)].lockToOriginal();
   }
+  
+
+  
 
 
-  // Special case for wave: keep one edge stationary while the opposing one oscillates
+  /* // Special case for wave: keep one edge stationary while the opposing one oscillates
   if (SceneParams.wave) {
     for (let i = 0; i <= w; i++) {
       particles[cloth.index(h, i)].lockToOriginal();
@@ -122,6 +120,7 @@ Sim.enforcePinConstraints = function() {
   } else if (SceneParams.pinned === "None") {
     return;
   } 
+  */
 
 }
 

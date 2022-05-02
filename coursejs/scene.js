@@ -359,10 +359,11 @@ Scene.buildBoom = function() {
   });
   
   let boom = new THREE.Mesh(boomGeo.geometry, boomGeo.material);
-  
   boom.position.x = 0;
   boom.position.z = 0;
   boom.position.y = -10;
+  boom.rotateY(SceneParams.sailAngle/180*Math.pi);
+
   boom.receiveShadow = false;
   boom.castShadow = false;
   boomGeo.meshes.push(boom);

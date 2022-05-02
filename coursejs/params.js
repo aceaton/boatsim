@@ -35,7 +35,7 @@ class Params {
     // THE REST DISTANCE OF THE VERTICAL and horizontal springs
     this.restDistanceV = 1;
     this.restDistanceH = this.sailWidth/this.sailHeight;
-    this.restDistanceS = Math.sqrt(restDistanceV**2 + restDistanceH**2); // natural distance multiplier of diagonal springs
+    this.restDistanceS = Math.sqrt(this.restDistanceV**2 + this.restDistanceH**2); // natural distance multiplier of diagonal springs
 
 
     this.xSegs = Math.round(this.fabricLength / this.restDistance); // how many particles wide is the cloth
