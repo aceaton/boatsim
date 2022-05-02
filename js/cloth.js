@@ -155,40 +155,52 @@ function Cloth(w, h, l) {
   // Add constraints
   for (let v = 0; v <= h; v++) {
     for (let u = 0; u <= v; u++) {
-      // constraints on the direct vertical edges
-      if (v > 0 && u < v) {
+      
+      if (u < v) {
+        // constraints on the direct vertical edges
         constraints.push(
           new Constraint(particles[index(u,v)],particles[index(u,v-1)],this.restDistance*this.restDistanceV)
         );
+        if (u < v-1) {
+          // constraints on the ne/sw diagonal edges
+          constraints.push(
+            new Constraint(particles[index(u,v)],particles[index(u+1,v-1)],this.restDistance*this.restDistanceS)
+          );
+        }
       }
-      // constraints on the direct horizontal edges
+      
       if (u > 0) {
+        // constraints on the direct horizontal edges
         constraints.push(
           new Constraint(particles[index(u,v)],particles[index(u-1,v)],this.restDistance*this.restDistanceH)
         );
+        // constraints on the nw/se diagonal edges
+        constraints.push(
+          new Constraint(particles[index(u,v)],particles[index(u-1,v-1)],this.restDistance*this.restDistanceS)
+        );
       }
-      // constraints on the 
+      
     }
   }
 
   // Edge constraints
   let rconstraints = [];
 
-  for (let v = 0; v <= h; v++) {
-    for (let u = 0; u <= v; u++) {
-      if (v < h && (u == 0 || u == w)) {
-        constraints.push(
-          new Constraint(particles[index(u, v)], particles[index(u, v + 1)], this.restDistance)
-        );
-      }
-      if (u < w && (v == 0 || v == h)) {
-        constraints.push(
-          new Constraint(particles[index(u, v)], particles[index(u + 1, v)], this.restDistance)
-        );
-      }
-      
-    }
-  }
+  // for (let v = 0; v <= h; v++) {
+  //   for (let u = 0; u <= v; u++) {
+  //     if (v < h && (u == 0 || u == w)) {
+  //       constraints.push(
+  //         new Constraint(particles[index(u, v)], particles[index(u, v + 1)], this.restDistance)
+  //       );
+  //     }
+  //     if (u < w && (v == 0 || v == h)) {
+  //       constraints.push(
+  //         new Constraint(particles[index(u, v)], particles[index(u + 1, v)], this.restDistance)
+  //       );
+  //     }
+  //     if ()
+  //   }
+  // }
 
   // Structural constraints
   if (SceneParams.structuralSprings) {
