@@ -124,7 +124,7 @@ function Cloth(w, h, l) {
   // Internal helper function for computing 1D index into particles list
   // from a particle's 2D index
   function index(u, v) {
-    return (v * (v+1))/2 + w;
+    return (v * (v+1))/2 + u;
     // return u + v * (w + 1);
   }
   this.index = index;
