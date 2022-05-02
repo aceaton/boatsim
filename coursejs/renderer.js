@@ -77,7 +77,7 @@ Renderer.render = function() {
   // i.e. copy positions from the particles (i.e. result of physics simulation)
   // to the cloth geometry
   let p = cloth.particles;
-  //console.log(p);
+  // console.log(p);
   for (let i = 0, il = p.length; i < il; i++) {
     Scene.cloth.geometry.vertices[i].copy(p[i].position);
   }
