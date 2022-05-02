@@ -124,7 +124,7 @@ function Cloth(w, h, l) {
   // Internal helper function for computing 1D index into particles list
   // from a particle's 2D index
   function index(u, v) {
-    return (u * (u+1))/2 + w;
+    return (v * (v+1))/2 + w;
     // return u + v * (w + 1);
   }
   this.index = index;
@@ -181,12 +181,12 @@ function Cloth(w, h, l) {
           new Constraint(particles[index(u, v)], particles[index(u, v + 1)], this.restDistance)
         );
       }
-
       if (u < w && (v == 0 || v == h)) {
         constraints.push(
           new Constraint(particles[index(u, v)], particles[index(u + 1, v)], this.restDistance)
         );
       }
+      if ()
     }
   }
 
