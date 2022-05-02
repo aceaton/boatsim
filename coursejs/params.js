@@ -44,11 +44,11 @@ class Params {
     // NEW PARAMETERS - start of the cloth and divisions
     // ====================================================================
     this.d = 20;
-    this.p1 = new THREE.Vector3(-250,500,0);
-    this.sailWidth = 500;
+    // this.p1 = new THREE.Vector3(0,500,0);
+    this.sailWidth = 250;
     this.sailHeight = 500;
 
-    this.p1x = -250;
+    this.p1x = 0;
     this.p1y = 500;
     this.p1z = 0;
 

@@ -47,7 +47,7 @@ function triangle(p1,p2,p3) {
     let perp = new THREE.Vector3().subVectors(p3p1,dotted);
 
     vec = p1.clone().add(mast.multiplyScalar(v).add(perp.multiplyScalar(u)));
-  }
+  };
 
 }
 
@@ -58,13 +58,20 @@ function triangle(p1,p2,p3) {
 let corner1 = new THREE.Vector3(-250,125,-250);
 let corner2 = new THREE.Vector3(-250,125,250);
 let corner3 = new THREE.Vector3(250,125,-250);
+
 // let initParameterizedPosition = triangle(corner1,corner2,corner3);
-let initParametrizedPosition = function(u,v) {
+let initParameterizedPosition = function(u,v,vec) {
   let pos = new THREE.Vector3();
-  let ang = SceneParams.sailAngle/180*Math.pi;
-  let len = -v*h/d;
-  let p1 = new THREE.Vector3(SceneParams.p1x,SceneParams.p1y,SceneParams.p1z);
-  pos = new THREE.Vector3().addVectors(p1,new THREE.Vector3(u*w/d,len*Math.cos(ang),len*Math.sin(ang)));
+  let ang = SceneParams.sailAngle/180*Math.PI;
+  // let p1 = new THREE.Vector3(SceneParams.p1x,SceneParams.p1y,SceneParams.p1z);
+  let d = SceneParams.d;
+  let h = SceneParams.sailHeight;
+  let w = SceneParams.sailWidth;
+  // console.log(u*w/d);
+  // console.log(ang);
+  // pos.addVectors(p1,new THREE.Vector3(u*w/d*Math.cos(ang),-v*h/d,u*w/d*Math.sin(ang)));
+  // console.log(pos);
+  vec.set(SceneParams.p1x+u*w/d*Math.cos(ang),SceneParams.p1y-v*h/d,SceneParams.p1z+u*w/d*Math.sin(ang));
 }
 
 function liftCoeff(angleDegrees) {
@@ -134,17 +141,13 @@ function Cloth(w, h, l) {
   let particles = [];
   let constraints = [];
 
-  let d = SceneParams.d;
-  let height = SceneParams.sailHeight;
-  let width = SceneParams.sailWidth;
-
-  // let p1 = SceneParams.p1;
-  let p1 = new THREE.Vector3(SceneParams.p1x,SceneParams.p1y,SceneParams.p1z);
-
   // Create particles
   for (let v = 0; v <= h; v++) {
     for (let u = 0; u <= v; u++) {
-      particles.push(new Particle(p1.x+u*width/w, p1.y-v*height/h, 0, SceneParams.MASS));
+      // let pos = new THREE.Vector3();
+      // initParametrizedPosition(u,v,pos);
+      particles.push(new Particle(u,v,0,SceneParams.MASS));
+      // particles.push(new Particle(p1.x+u*width/w, p1.y-v*height/h, 0, SceneParams.MASS));
     }
   }
 
