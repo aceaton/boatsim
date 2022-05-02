@@ -343,6 +343,7 @@ Scene.buildMast = function() {
   return mastGeo;
 }
 
+
 Scene.buildBoom = function() {
 
   let boomGeo = {};
@@ -361,7 +362,7 @@ Scene.buildBoom = function() {
   
   boom.position.x = 0;
   boom.position.z = 0;
-  boom.position.y = 100;
+  boom.position.y = -10;
   boom.receiveShadow = false;
   boom.castShadow = false;
   boomGeo.meshes.push(boom);
