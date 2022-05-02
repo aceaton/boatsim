@@ -23,7 +23,7 @@ class Params {
     // ====================================================================
     //                   Properties of the cloth
     // ====================================================================
-    this.fabricLength = 500;  // sets the length of the cloth in both dimensions
+    this.fabricLength = 350;  // sets the length of the cloth in both dimensions
 
     // Natural resting distances
     // (these are explicitly redefined in cloth.js)
@@ -43,7 +43,7 @@ class Params {
 
     // NEW PARAMETERS - start of the cloth and divisions
     this.d = 20;
-    this.p1 = new THREE.Vector3(-250,500,0);
+    this.p1 = new THREE.Vector3(0,630,0);
 
     // Which pieces of the cloth are being held up?
     this.pinned = "Corners";

@@ -67,6 +67,7 @@ Sim.pinCloth = function(choice) {
 }
 
 Sim.enforcePinConstraints = function() {
+  // TODO: pin the mast to the boom permanently
   let particles = cloth.particles;
   const w = cloth.w;
   const h = cloth.h;

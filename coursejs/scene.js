@@ -28,7 +28,8 @@ Scene.init = function() {
   // Now fill the scene with objects
   Scene.ground = Scene.buildGround();
   Scene.cloth  = Scene.buildCloth();
-  Scene.poles  = Scene.buildPoles();
+  Scene.mast  = Scene.buildMast();
+  Scene.boom = Scene.buildBoom();
   Scene.sphere = Scene.buildSphere();
   Scene.box    = Scene.buildBox();
 
@@ -140,8 +141,8 @@ Scene.buildCloth = function() {
   // let lastRow = [0];
   let c = 0;
   let d = SceneParams.d;
-  let w = 500;
-  let h = 500;
+  let w = 100;
+  let h = 100;
   for (let i = 0; i <= d; i++) {
     for (let j = 0; j <= i; j++) {
       g.vertices.push(new THREE.Vector3().addVectors(SceneParams.p1,new THREE.Vector3(j*w/d,-i*h/d,0)));
@@ -149,8 +150,8 @@ Scene.buildCloth = function() {
       
       if (i>0 && j>0) {
         // add normal triangle
-        console.log(c);
-        console.log(i,j);
+        //console.log(c);
+        // console.log(i,j);
         g.faces.push(new THREE.Face3(c,c-1,c-1-i));
         if (i>1 && j<d) {
           // add other direction triangle 
@@ -163,7 +164,7 @@ Scene.buildCloth = function() {
   g.computeBoundingSphere();
   cloth.geometry.dynamic = true;
   // console.log(cloth.geometry);
-  console.log(g);
+  // console.log(g);
 
   // cloth mesh
   // a mesh takes the geometry and applies a material to it
@@ -258,8 +259,8 @@ Scene.buildGround = function() {
   return ground;
 }
 
-Scene.buildPoles = function() {
-  let poles = {};
+Scene.buildMast = function() {
+  /* let poles = {};
   poles.height = 250 + 125;
   poles.meshes = [];
   poles.geometry = new THREE.BoxGeometry(5, poles.height, 5);
@@ -306,9 +307,60 @@ Scene.buildPoles = function() {
   mesh4.receiveShadow = false;
   mesh4.castShadow = false;
   poles.meshes.push(mesh4);
-  Scene.scene.add(mesh4);
+  Scene.scene.add(mesh4); */
 
-  return poles;
+  let mastGeo = {};
+  mastGeo.height = 630;
+  mastGeo.meshes = [];
+  mastGeo.geometry = new THREE.BoxGeometry(10, mastGeo.height, 5);
+  // Position the poles on the "floor" of their coordinate space
+  mastGeo.geometry.translate(0,630/2,0);
+  mastGeo.material = new THREE.MeshPhongMaterial({
+    color: 0xffffff,
+    specular: 0x111111,
+    shininess: 100,
+    side: THREE.DoubleSide,
+  });
+
+
+  let mast = new THREE.Mesh(mastGeo.geometry, mastGeo.material);
+  mast.position.x = 0;
+  mast.position.z = 0;
+  mast.position.y = SceneParams.groundY;
+  mast.receiveShadow = false;
+  mast.castShadow = false;
+  mastGeo.meshes.push(mast);
+  Scene.scene.add(mast);
+
+  return mastGeo;
+}
+
+Scene.buildBoom = function() {
+
+  let boomGeo = {};
+  boomGeo.length = 240;
+  boomGeo.meshes = [];
+  boomGeo.geometry = new THREE.BoxGeometry(boomGeo.length, 10, 5);
+  boomGeo.geometry.translate((240/2),-100,0);
+  boomGeo.material = new THREE.MeshPhongMaterial({
+    color: 0xffffff,
+    specular: 0x111111,
+    shininess: 100,
+    side: THREE.DoubleSide,
+  });
+  
+  let boom = new THREE.Mesh(boomGeo.geometry, boomGeo.material);
+  
+  boom.position.x = 0;
+  boom.position.z = 0;
+  boom.position.y = 100;
+  boom.receiveShadow = false;
+  boom.castShadow = false;
+  boomGeo.meshes.push(boom);
+  Scene.scene.add(boom);
+
+  return boomGeo;
+
 }
 
 Scene.buildBox = function() {
@@ -367,7 +419,8 @@ Scene.createConstraintLine = function(constraint) {
 }
 
 Scene.showWireframe = function(flag) {
-  Scene.poles.material.wireframe = flag;
+  Scene.boom.material.wireframe = flag;
+  Scene.mast.material.wireframe = flag;
   Scene.cloth.material.wireframe = flag;
   Scene.sphere.material.wireframe = flag;
   Scene.box.material.wireframe = flag;
@@ -494,7 +547,7 @@ Scene.update = function() {
 
 
   // Reset any scaling from `wave` feature
-  for (let mesh of Scene.poles.meshes) {
+  /*for (let mesh of Scene.poles.meshes) {
     mesh.scale.y = 1;
-  }
+  } */
 }
