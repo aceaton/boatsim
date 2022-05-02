@@ -8,7 +8,7 @@ Sim.init = function() {
   randomPoints = [];
 
   // The cloth object being simulated.
-  cloth = new Cloth(SceneParams.xSegs, SceneParams.ySegs, SceneParams.fabricLength);
+  cloth = new Cloth(SceneParams.d, SceneParams.d, SceneParams.fabricLength);
 
   Sim.update();
 }
@@ -24,24 +24,24 @@ Sim.simulate = function() {
   }
 
   // Apply all relevant forces to the cloth's particles
-  cloth.applyForces();
+  // cloth.applyForces();
 
   // For each particle, perform Verlet integration to compute its new position
   cloth.update(SceneParams.TIMESTEP);
 
   // Handle collisions with other objects in the scene
-  cloth.handleCollisions();
+  // cloth.handleCollisions();
 
   // Handle self-intersections
-  if (SceneParams.avoidClothSelfIntersection) {
-    cloth.handleSelfIntersections();
-  }
+  // if (SceneParams.avoidClothSelfIntersection) {
+  //   cloth.handleSelfIntersections();
+  // }
 
   // Apply cloth constraints
-  cloth.enforceConstraints();
+  // cloth.enforceConstraints();
 
   // Pin constraints
-  Sim.enforcePinConstraints();
+  // Sim.enforcePinConstraints();
 }
 
 /****** Helper functions for the simulation ******/
@@ -71,44 +71,44 @@ Sim.enforcePinConstraints = function() {
   const w = cloth.w;
   const h = cloth.h;
   // Special case for wave: keep one edge stationary while the opposing one oscillates
-  if (SceneParams.wave) {
-    for (let i = 0; i <= w; i++) {
-      particles[cloth.index(h, i)].lockToOriginal();
-      particles[cloth.index(0, i)].lock();
-    }
-    return;
-  }
+  // if (SceneParams.wave) {
+  //   for (let i = 0; i <= w; i++) {
+  //     particles[cloth.index(h, i)].lockToOriginal();
+  //     particles[cloth.index(0, i)].lock();
+  //   }
+  //   return;
+  // }
 
-  if (SceneParams.pinned === "Corners") {
-    // could also do particles[blah].lock() which will lock particles to
-    // wherever they are, not to their original position
-    particles[cloth.index(0, 0)].lockToOriginal();
-    particles[cloth.index(w, 0)].lockToOriginal();
-    particles[cloth.index(0, h)].lockToOriginal();
-    particles[cloth.index(w, h)].lockToOriginal();
-  } else if (SceneParams.pinned === "OneEdge") {
-    for (let x = 0; x <= w; x++) {
-      particles[cloth.index(x, 0)].lockToOriginal();
-    }
-  } else if (SceneParams.pinned === "TwoEdges") {
-    for (let y = 0; y <= h; y++) {
-      particles[cloth.index(0, y)].lockToOriginal();
-      particles[cloth.index(w, y)].lockToOriginal();
-    }
-  } else if (SceneParams.pinned === "FourEdges") {
-    for (let i = 0; i <= w; i++) {
-      particles[cloth.index(0, i)].lockToOriginal();
-      particles[cloth.index(w, i)].lockToOriginal();
-      particles[cloth.index(i, 0)].lockToOriginal();
-      particles[cloth.index(i, h)].lockToOriginal();
-    }
-  } else if (SceneParams.pinned === "Random") {
-    for (let pt of randomPoints) {
-      particles[cloth.index(pt.x, pt.y)].lockToOriginal();
-    }
-  } else if (SceneParams.pinned === "None") {
-    return;
-  }
+  // if (SceneParams.pinned === "Corners") {
+  //   // could also do particles[blah].lock() which will lock particles to
+  //   // wherever they are, not to their original position
+  //   particles[cloth.index(0, 0)].lockToOriginal();
+  //   particles[cloth.index(w, 0)].lockToOriginal();
+  //   particles[cloth.index(0, h)].lockToOriginal();
+  //   particles[cloth.index(w, h)].lockToOriginal();
+  // } else if (SceneParams.pinned === "OneEdge") {
+  //   for (let x = 0; x <= w; x++) {
+  //     particles[cloth.index(x, 0)].lockToOriginal();
+  //   }
+  // } else if (SceneParams.pinned === "TwoEdges") {
+  //   for (let y = 0; y <= h; y++) {
+  //     particles[cloth.index(0, y)].lockToOriginal();
+  //     particles[cloth.index(w, y)].lockToOriginal();
+  //   }
+  // } else if (SceneParams.pinned === "FourEdges") {
+  //   for (let i = 0; i <= w; i++) {
+  //     particles[cloth.index(0, i)].lockToOriginal();
+  //     particles[cloth.index(w, i)].lockToOriginal();
+  //     particles[cloth.index(i, 0)].lockToOriginal();
+  //     particles[cloth.index(i, h)].lockToOriginal();
+  //   }
+  // } else if (SceneParams.pinned === "Random") {
+  //   for (let pt of randomPoints) {
+  //     particles[cloth.index(pt.x, pt.y)].lockToOriginal();
+  //   }
+  // } else if (SceneParams.pinned === "None") {
+  //   return;
+  // }
 }
 
 // restartCloth() is used when we change a fundamental cloth property with a slider

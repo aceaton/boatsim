@@ -2,12 +2,14 @@
 
 // Particle constructor
 function Particle(x, y, z, mass) {
-  this.position = new THREE.Vector3(); // position
-  this.previous = new THREE.Vector3(); // previous
-  this.original = new THREE.Vector3(); // original
-  initParameterizedPosition(x, y, this.position);
-  initParameterizedPosition(x, y, this.previous);
-  initParameterizedPosition(x, y, this.original);
+  let pos = new THREE.Vector3(x,y,z);
+  this.position = new THREE.Vector3().copy(pos); // position
+  this.previous = new THREE.Vector3().copy(pos); // previous
+  this.original = new THREE.Vector3().copy(pos); // original
+
+  // initParameterizedPosition(x, y, this.position);
+  // initParameterizedPosition(x, y, this.previous);
+  // initParameterizedPosition(x, y, this.original);
 
   this.netForce = new THREE.Vector3(); // net force acting on particle
   this.mass = mass; // mass of the particle

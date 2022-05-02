@@ -34,9 +34,31 @@ function plane(width, height) {
   };
 }
 
+// Our modified cloth - the cloth is a triangle between points p1,p2,p3.
+// Let mast be the vector between p2 and p1. v is the distance along the mast from p1, and u is the distance perpendicular to the mast in the p3 direction
+function triangle(p1,p2,p3) {
+  // v is the distance from the top down
+  // u is the distance from the mast out towards p3
+  return function(u,v,vec) {
+    // console.log(u,v);
+    let mast = new THREE.Vector3().subVectors(p2,p1);
+    let p3p1 = new THREE.Vector3().subVectors(p3,p1);
+    let dotted = mast.clone().multiplyScalar(mast.dot(p3p1));
+    let perp = new THREE.Vector3().subVectors(p3p1,dotted);
+
+    vec = p1.clone().add(mast.multiplyScalar(v).add(perp.multiplyScalar(u)));
+  }
+
+}
+
 // A higher order function f(u,v,vec) that sets the components of a Vector3 vec
 // using the u,v coordinates in a plane.
 let initParameterizedPosition = plane(500,500);
+// TODO DEFINE INITIAL LOCATION OF THE CLOTH
+let corner1 = new THREE.Vector3(-250,125,-250);
+let corner2 = new THREE.Vector3(-250,125,250);
+let corner3 = new THREE.Vector3(250,125,-250);
+// let initParameterizedPosition = triangle(corner1,corner2,corner3);
 
 /***************************** CONSTRAINT *****************************/
 function Constraint(p1, p2, distance) {
@@ -98,12 +120,17 @@ function Cloth(w, h, l) {
   let particles = [];
   let constraints = [];
 
+  let d = SceneParams.d;
+  let height = 500;
+  let width = 500;
+
   // Create particles
   for (let v = 0; v <= h; v++) {
-    for (let u = 0; u <= w; u++) {
-      particles.push(new Particle(u / w, v / h, 0, SceneParams.MASS));
+    for (let u = 0; u <= v; u++) {
+      particles.push(new Particle(SceneParams.p1.x+u*width/w, SceneParams.p1.y-v*height/h, 0, SceneParams.MASS));
     }
   }
+
 
   // Edge constraints
   let rconstraints = [];
@@ -515,9 +542,9 @@ Cloth.prototype.enforceConstraints = function() {
   // ----------- STUDENT CODE BEGIN ------------
   // Enforce all constraints in the cloth.
   // ----------- Our reference solution uses 3 lines of code.
-  for (let c = 0; c < constraints.length; c++) {
-    constraints[c].enforce();
-  }
+  // for (let c = 0; c < constraints.length; c++) {
+  //   constraints[c].enforce();
+  // }
   // ----------- STUDENT CODE END ------------
 };
 

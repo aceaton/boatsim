@@ -41,6 +41,10 @@ class Params {
     this.showConstraints = false; // should constraints be drawn to screen?
     this.allowShownConstraintMovement = false; // should drawn constraints be locked in place?
 
+    // NEW PARAMETERS - start of the cloth and divisions
+    this.d = 20;
+    this.p1 = new THREE.Vector3(-250,500,0);
+
     // Which pieces of the cloth are being held up?
     this.pinned = "Corners";
 

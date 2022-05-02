@@ -128,8 +128,42 @@ Scene.buildCloth = function() {
 
   // cloth geometry
   // the geometry contains all the points and faces of an object
-  cloth.geometry = new THREE.ParametricGeometry(initParameterizedPosition, SceneParams.xSegs, SceneParams.ySegs);
+  // cloth.geometry = new THREE.ParametricGeometry(initParameterizedPosition, SceneParams.xSegs, SceneParams.ySegs);
+  
+  cloth.geometry = new THREE.Geometry();
+  
+  let g = cloth.geometry;
+
+  // make the triangle as the initial geometry;
+  // using w and h as width and height, p1 as initial point (top of sail), and d as number of divisions (like xSegs);
+  // g.vertices.push(new THREE.Vector3().copy(p1));
+  // let lastRow = [0];
+  let c = 0;
+  let d = SceneParams.d;
+  let w = 500;
+  let h = 500;
+  for (let i = 0; i <= d; i++) {
+    for (let j = 0; j <= i; j++) {
+      g.vertices.push(new THREE.Vector3().addVectors(SceneParams.p1,new THREE.Vector3(j*w/d,-i*h/d,0)));
+      // console.log(g.vertices.slice(-1)[0]);
+      
+      if (i>0 && j>0) {
+        // add normal triangle
+        console.log(c);
+        console.log(i,j);
+        g.faces.push(new THREE.Face3(c,c-1,c-1-i));
+        if (i>1 && j<d) {
+          // add other direction triangle 
+          g.faces.push(new THREE.Face3(c,c-i-1,c-i));
+        }
+      }
+      c++;
+    }
+  }
+  g.computeBoundingSphere();
   cloth.geometry.dynamic = true;
+  // console.log(cloth.geometry);
+  console.log(g);
 
   // cloth mesh
   // a mesh takes the geometry and applies a material to it
@@ -163,6 +197,7 @@ Scene.buildCloth = function() {
 
   // whenever we make something, we need to also add it to the scene
   Scene.scene.add(cloth.mesh); // add cloth to the scene
+  // console.log(cloth.geometry.vertices);
   return cloth;
 }
 
