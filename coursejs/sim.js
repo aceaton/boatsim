@@ -67,10 +67,22 @@ Sim.pinCloth = function(choice) {
 }
 
 Sim.enforcePinConstraints = function() {
-  // TODO: pin the mast to the boom permanently
+  // TODO: pin the main sail head and all points down the luff to the mast! 
+  // nah do this in the other one
+
   let particles = cloth.particles;
   const w = cloth.w;
   const h = cloth.h;
+
+  if (SceneParams.pinned === "Classic") {
+
+  for (let i = 0; i <= particles.length; i++) {
+
+   }
+
+  }
+
+
   // Special case for wave: keep one edge stationary while the opposing one oscillates
   if (SceneParams.wave) {
     for (let i = 0; i <= w; i++) {
@@ -109,7 +121,8 @@ Sim.enforcePinConstraints = function() {
     }
   } else if (SceneParams.pinned === "None") {
     return;
-  }
+  } 
+
 }
 
 // restartCloth() is used when we change a fundamental cloth property with a slider
