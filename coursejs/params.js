@@ -27,9 +27,16 @@ class Params {
 
     // Natural resting distances
     // (these are explicitly redefined in cloth.js)
-    this.restDistance = 20; // the natural resting distance of adjacent springs
+    // this.restDistance = 20; // the natural resting distance of adjacent springs
+    this.restDistance = this.sailHeight/this.d;
     this.restDistanceB = 2; // natural distance multiplier of 2-apart springs
-    this.restDistanceS = Math.sqrt(2); // natural distance multiplier of diagonal springs
+    // this.restDistanceS = Math.sqrt(2); // natural distance multiplier of diagonal springs
+    
+    // THE REST DISTANCE OF THE VERTICAL and horizontal springs
+    this.restDistanceV = 1;
+    this.restDistanceH = this.sailWidth/this.sailHeight;
+    this.restDistanceS = Math.sqrt(restDistanceV**2 + restDistanceH**2); // natural distance multiplier of diagonal springs
+
 
     this.xSegs = Math.round(this.fabricLength / this.restDistance); // how many particles wide is the cloth
     this.ySegs = Math.round(this.fabricLength / this.restDistance); // how many particles tall is the cloth
