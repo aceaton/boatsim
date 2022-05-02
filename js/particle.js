@@ -11,7 +11,7 @@ function Particle(x, y, z, mass) {
   initParameterizedPosition(x, y, this.previous);
   initParameterizedPosition(x, y, this.original);
 
-  console.log(this.position, x,y);
+  // console.log(this.position, x,y);
 
   this.netForce = new THREE.Vector3(); // net force acting on particle
   this.mass = mass; // mass of the particle

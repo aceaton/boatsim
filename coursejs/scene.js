@@ -154,7 +154,7 @@ Scene.buildCloth = function() {
       // console.log(SceneParams.d);
       // console.log(SceneParams.sailheight);
       // console.log(j*w/d,-i*h/d,0);
-      console.log(g.vertices.slice(-1)[0]);
+      // console.log(g.vertices.slice(-1)[0]);
       
       if (i>0 && j>0) {
         // add normal triangle
