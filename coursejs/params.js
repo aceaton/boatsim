@@ -54,11 +54,11 @@ class Params {
 
     // wind comes along the x axis
 
-    this.sailAngle = 45;
+    // this.sailAngle = 45;
     // ====================================================================
 
     // Which pieces of the cloth are being held up?
-    this.pinned = "Corners";
+    this.pinned = "Classic";
 
     // ====================================================================
     //            Properties of forces and interactions
