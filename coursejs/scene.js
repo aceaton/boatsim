@@ -140,19 +140,27 @@ Scene.buildCloth = function() {
   // let lastRow = [0];
   let c = 0;
   let d = SceneParams.d;
-  let w = 500;
-  let h = 500;
+  let h = SceneParams.sailHeight;
+  let w = SceneParams.sailWidth;
+  // let p1 = SceneParams.p1;
+  let p1 = new THREE.Vector3(SceneParams.p1x,SceneParams.p1y,SceneParams.p1z);
   for (let i = 0; i <= d; i++) {
     for (let j = 0; j <= i; j++) {
-      g.vertices.push(new THREE.Vector3().addVectors(SceneParams.p1,new THREE.Vector3(j*w/d,-i*h/d,0)));
+      let len = -i*h/d;
+      let ang = SceneParams.sailAngle/180*Math.pi;
+      g.vertices.push(new THREE.Vector3().addVectors(p1,new THREE.Vector3(j*w/d,len*Math.cos(ang),len*Math.sin(ang))));
+      // console.log(SceneParams.p1);
+      // console.log(SceneParams.d);
+      // console.log(SceneParams.sailheight);
+      // console.log(j*w/d,-i*h/d,0);
       // console.log(g.vertices.slice(-1)[0]);
       
       if (i>0 && j>0) {
         // add normal triangle
-        console.log(c);
-        console.log(i,j);
+        // console.log(c);
+        // console.log(i,j);
         g.faces.push(new THREE.Face3(c,c-1,c-1-i));
-        if (i>1 && j<d) {
+        if (i>1 && j<d && j<i) {
           // add other direction triangle 
           g.faces.push(new THREE.Face3(c,c-i-1,c-i));
         }

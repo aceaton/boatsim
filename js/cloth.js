@@ -53,12 +53,26 @@ function triangle(p1,p2,p3) {
 
 // A higher order function f(u,v,vec) that sets the components of a Vector3 vec
 // using the u,v coordinates in a plane.
-let initParameterizedPosition = plane(500,500);
+// let initParameterizedPosition = plane(500,500);
 // TODO DEFINE INITIAL LOCATION OF THE CLOTH
 let corner1 = new THREE.Vector3(-250,125,-250);
 let corner2 = new THREE.Vector3(-250,125,250);
 let corner3 = new THREE.Vector3(250,125,-250);
 // let initParameterizedPosition = triangle(corner1,corner2,corner3);
+let initParametrizedPosition = function(u,v) {
+  let pos = new THREE.Vector3();
+  let ang = SceneParams.sailAngle/180*Math.pi;
+  let len = -v*h/d;
+  let p1 = new THREE.Vector3(SceneParams.p1x,SceneParams.p1y,SceneParams.p1z);
+  pos = new THREE.Vector3().addVectors(p1,new THREE.Vector3(u*w/d,len*Math.cos(ang),len*Math.sin(ang)));
+}
+
+function liftCoeff(angleDegrees) {
+  let d = angleDegrees;
+  return .004266*d**4 -.10058*d**3 + 1.426*d**2 - 10.54*d + 28.64 - .0001160 * d**5 +.000002075*d**6 - 2.433e-8*d**7 + 1.800e-10*d**8 - 7.626e-13*d**9 + 1.412e-15*d**10;
+}
+
+// console.log("20: " + liftCoeff(20));
 
 /***************************** CONSTRAINT *****************************/
 function Constraint(p1, p2, distance) {
@@ -121,22 +135,31 @@ function Cloth(w, h, l) {
   let constraints = [];
 
   let d = SceneParams.d;
-  let height = 500;
-  let width = 500;
+  let height = SceneParams.sailHeight;
+  let width = SceneParams.sailWidth;
+
+  // let p1 = SceneParams.p1;
+  let p1 = new THREE.Vector3(SceneParams.p1x,SceneParams.p1y,SceneParams.p1z);
 
   // Create particles
   for (let v = 0; v <= h; v++) {
     for (let u = 0; u <= v; u++) {
-      particles.push(new Particle(SceneParams.p1.x+u*width/w, SceneParams.p1.y-v*height/h, 0, SceneParams.MASS));
+      particles.push(new Particle(p1.x+u*width/w, p1.y-v*height/h, 0, SceneParams.MASS));
     }
   }
 
+  // // Add constraints
+  // for (let v = 0; v <= h; v++) {
+  //   for (let u = 0; u <= v; u++) {
+
+  //   }
+  // }
 
   // Edge constraints
   let rconstraints = [];
 
   for (let v = 0; v <= h; v++) {
-    for (let u = 0; u <= w; u++) {
+    for (let u = 0; u <= v; u++) {
       if (v < h && (u == 0 || u == w)) {
         constraints.push(
           new Constraint(particles[index(u, v)], particles[index(u, v + 1)], this.restDistance)
