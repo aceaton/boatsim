@@ -75,12 +75,15 @@ class Params {
     this.boatCOM = new THREE.Vector3(-100,-249+140,0);
     this.boatCOMx = -100;
     this.boatCOMy = -109;
-    this.boatMass = 100;
+    this.boatMass = 10;
 
-    this.waterDensity = .0001;
+    // this.accellMult = 
+
+    this.waterDensity = .00001;
 
     this.torqueMult = .000000005;
 
+    this.accelMult = 10000;
 
     this.torqueOn = true;
 

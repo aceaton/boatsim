@@ -112,7 +112,7 @@ Boat.prototype.applyForcesAndUpdate = function() {
   this.previous = this.position;
   p.multiplyScalar(1-DAMPING);
   p.add(this.position);
-  p.add(this.netForce.multiplyScalar(deltaT*deltaT/this.mass));
+  p.add(this.netForce.multiplyScalar(SceneParams.accelMult*deltaT*deltaT/this.mass));
   this.position = p;
   this.netForce = new THREE.Vector3(0,0,0);
   
@@ -160,6 +160,6 @@ Boat.prototype.applyGravity = function() {
 };
 
 Boat.prototype.applyKeelForce = function() {
-    this.torque.add(new THREE.Vector3().copy(this.ang).multiplyScalar(50));
+    // this.torque.add(new THREE.Vector3().copy(this.ang).multiplyScalar(50));
 }
 
