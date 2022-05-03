@@ -408,7 +408,7 @@ Scene.buildKeel = function() {
   let keelGeo = {};
   keelGeo.meshes = [];
   keelGeo.length = 120;
-  keelGeo.width = 40;
+  keelGeo.width = 70;
   keelGeo.depth = 5;
   keelGeo.geometry = new THREE.BoxGeometry(keelGeo.width, keelGeo.length, keelGeo.depth);
   keelGeo.geometry.rotateY(Math.PI/2);
@@ -421,7 +421,7 @@ Scene.buildKeel = function() {
 
   let keel = new THREE.Mesh(keelGeo.geometry, keelGeo.material);
   keel.position.x = 0;
-  keel.position.z = 50;
+  keel.position.z = 100;
   keel.position.y = -249 - 60;
   keel.receiveShadow = true;
   keel.castShadow = true;
@@ -469,6 +469,7 @@ Scene.buildBoom = function() {
   boomGeo.meshes = [];
   boomGeo.geometry = new THREE.BoxGeometry(boomGeo.length, 10, 5);
   boomGeo.geometry.translate((240/2),-100,0);
+  boomGeo.geometry.rotateY(-SceneParams.sailAngle/180*Math.PI);
   boomGeo.material = new THREE.MeshPhongMaterial({
     color: 0x333333,//0xffffff,
     specular: 0x888888,//0x111111,
@@ -482,7 +483,6 @@ Scene.buildBoom = function() {
   boom.position.y = -10 + 120;
   // console.log(SceneParams.sailAngle);
   // console.log(SceneParams.sailAngle/180*Math.PI);
-  boom.rotateY(-SceneParams.sailAngle/180*Math.PI);
 
   boom.receiveShadow = true;
   boom.castShadow = true;

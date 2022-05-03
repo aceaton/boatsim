@@ -1,13 +1,14 @@
 function Boat(cloth) {
     this.mass = SceneParams.boatMass;
-
     let boatLoc = new THREE.Vector3(SceneParams.boatCOMx,SceneParams.boatCOMy,0);//.copy(SceneParams.boatCOM);
-    console.log(boatLoc);
+    // console.log(boatLoc);
     // console.log(SceneParams.boatCOM);
     let axis = new THREE.Vector3( 0, 1, 0 );
-    console.log(axis);
-    console.log(-1*SceneParams.boatAngle/180*Math.PI);
+    //console.log(axis);
+    //console.log(-1*SceneParams.boatAngle/180*Math.PI);
     boatLoc.applyAxisAngle(axis, -1*SceneParams.boatAngle/180*Math.PI);
+    //console.log(boatLoc);
+    console.log("below is boatLoc");
     console.log(boatLoc);
 
     // total amount of torque ever applied to boat - lets us see water submersion
@@ -16,6 +17,8 @@ function Boat(cloth) {
     this.origin = new THREE.Vector3().copy(boatLoc);
     // center of mass
     this.position = new THREE.Vector3().copy(boatLoc);
+    console.log(this.position);
+    console.log("here");
     this.previous = new THREE.Vector3().copy(boatLoc);
 
     this.ang = new THREE.Vector3(boatLoc.x,0,boatLoc.z);
@@ -27,7 +30,7 @@ function Boat(cloth) {
 }
 
 Boat.prototype.translate = function(tr) {
-    let toRot = [Scene.boat[0].geometry,Scene.boat[1],Scene.mast.geometry,Scene.boom.geometry];
+    let toRot = [Scene.boat[0].geometry,Scene.boat[1],Scene.mast.geometry,Scene.boom.geometry, Scene.keel.geometry];
     for (obj of toRot) {
         // console.log(obj);
         obj.translate(tr.x,tr.y,tr.z);
@@ -98,17 +101,17 @@ Boat.prototype.applyForcesAndUpdate = function() {
   if (SceneParams.gravity) {
     this.applyGravity();
   }
+  
+  this.applyKeelForce(upd);
 
-  this.applyKeelForce();
-
-  console.log(this.netForce);
-  console.log(this.netForce.multiplyScalar(deltaT*deltaT/this.mass));
+  //console.log(this.netForce);
+  //console.log(this.netForce.multiplyScalar(deltaT*deltaT/this.mass));
   
 //   console.log(this.torque);
   // integration
   const DAMPING = SceneParams.DAMPING;
   var p = new THREE.Vector3(0,0,0).subVectors(this.position, this.previous);
-  console.log(p);
+  // console.log(p);
   this.previous = this.position;
   p.multiplyScalar(1-DAMPING);
   p.add(this.position);
@@ -117,7 +120,7 @@ Boat.prototype.applyForcesAndUpdate = function() {
   this.netForce = new THREE.Vector3(0,0,0);
   
   let tr = new THREE.Vector3().subVectors(this.position, this.previous);
-  console.log(tr);
+  // console.log(tr);
   this.translate(tr);
 //   console.log(tr);
 
@@ -139,6 +142,8 @@ Boat.prototype.applyBuoyancy = function() {
     const GRAVITY = SceneParams.GRAVITY*50;
     let r = 140;
     let l = 295;
+    console.log("here2");
+    console.log(this.position);
     let depth = -249-this.position.y+r;
     // console.log(depth);
     if (depth <= 0) return;
@@ -159,8 +164,37 @@ Boat.prototype.applyGravity = function() {
 
 };
 
-Boat.prototype.applyKeelForce = function() {
+Boat.prototype.applyKeelForce = function(upd) {
     // this.torque.add(new THREE.Vector3().copy(this.ang).multiplyScalar(50));
+    // force from the water onto the keel
+    // perpendicular to boat component of the sail force
+    // also add torque such that it does not tip 
+    // boat loc is forward vector of the boat
+    // upd[0] is the force vector on the sail. 
+    if ((!upd[0].equals(new THREE.Vector3(0,0,0))) && upd[0]) {
+    var test = new THREE.Vector3(0,0,0);
+    console.log(test);
+    console.log(upd[0]);
+    
+    var theta = (Math.PI / 2) - this.position.angleTo(upd[0]);
+    console.log("below is upd");
+    console.log(upd[0]);
+    console.log("below is test3");
+    var test3 = this.position.angleTo(upd[0]);
+    console.log(test3);
+    var test2 = (this.position);
+    console.log("below is the position");
+    console.log(test2);
+    var keelForce = new THREE.Vector3().copy(upd[0]);
+    console.log("keelForce " + keelForce);
+    keelForce.multiplyScalar(-1 * Math.cos(theta));
+    console.log("keelForce " + keelForce);
+    console.log("netforce " + this.netForce);
+    this.netForce.add(new THREE.Vector3().copy(keelForce));
+    console.log("netforce " + this.netForce);
+    }
+
     
 }
+
 
