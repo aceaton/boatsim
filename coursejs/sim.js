@@ -11,7 +11,7 @@ Sim.init = function() {
 
   // The cloth object being simulated.
   cloth = new Cloth(SceneParams.d, SceneParams.d, SceneParams.fabricLength);
-  boat = new Boat(SceneParams.boatAngle, cloth);
+  boat = new Boat(cloth);
 
   Sim.update();
 }
@@ -27,7 +27,7 @@ Sim.simulate = function() {
   }
 
   // applies forces to the cloth, and updates the cloth, and uses the leftover forces to update the boat
-  boat.applyForces();
+  boat.applyForcesAndUpdate();
 
   // Handle collisions with other objects in the scene
   // cloth.handleCollisions();
@@ -35,7 +35,11 @@ Sim.simulate = function() {
   // Handle self-intersections
   // if (SceneParams.avoidClothSelfIntersection) {
   //   cloth.handleSelfIntersections();
-  // }
+  // // }
+  // cloth.applyForces();
+
+  // // For each particle, perform Verlet integration to compute its new position
+  // let upd = cloth.update(SceneParams.TIMESTEP,this.com);
 
   // Apply cloth constraints
   cloth.enforceConstraints();

@@ -360,6 +360,7 @@ Scene.buildBoat = function() {
   mainHullGeo.geometry.rotateZ(-Math.PI/2);
   mainHullGeo.geometry.rotateY(Math.PI);
   mainHullGeo.geometry.translate((mainHullGeo.mainLength / 2),0,0);
+  mainHullGeo.geometry.rotateY(-Math.PI/180*SceneParams.boatAngle);
   mainHullGeo.material = new THREE.MeshPhongMaterial({
     color: 0x333333,//0xffffff,
     specular: 0x111111,
@@ -381,8 +382,12 @@ Scene.buildBoat = function() {
   // inspired by https://github.com/AlexP11223/Three.js_IslandCastle
   var bowGeo = new THREE.ConeGeometry(mainHullGeo.centerwidth, 125, mainHullGeo.radialSegments, 1, false, 0, mainHullGeo.thetaLength);
   bowGeo.rotateY(Math.PI);
+  
   bowGeo.rotateZ(Math.PI/2);
   bowGeo.translate(-(125 / 2),0,0);
+  bowGeo.rotateY(-Math.PI/180*SceneParams.boatAngle);
+  
+  
   let bow = new THREE.Mesh(bowGeo, mainHullGeo.material);
   bow.position.x = 0;
   bow.position.z = 0;
@@ -393,7 +398,7 @@ Scene.buildBoat = function() {
   mainHull.add(bow);
   Scene.scene.add(bow);
 
-  return mainHullGeo;
+  return [mainHullGeo,bowGeo];
 
 }
 
@@ -521,7 +526,8 @@ Scene.showWireframe = function(flag) {
   Scene.cloth.material.wireframe = flag;
   Scene.sphere.material.wireframe = flag;
   Scene.box.material.wireframe = flag;
-  Scene.boat.material.wireframe = flag;
+  Scene.boat[0].material.wireframe = flag;
+  // Scene.boat[1].material.wireframe = flag;
 }
 
 // this part allows us to use an image for the cloth texture

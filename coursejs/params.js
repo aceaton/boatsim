@@ -68,12 +68,22 @@ class Params {
     // wind comes along the x axis
 
     // BOAT PARAMS
-    this.boatAngle = 50;
+    this.boatAngle = 90;
     this.sailAngle = 45;
 
     // position of the COM relative to the origin (in the direction of boat angle)
-    this.boatCOM = new THREE.Vector3(0,-100,0);
+    this.boatCOM = new THREE.Vector3(-100,-249+140,0);
+    this.boatCOMx = -100;
+    this.boatCOMy = -109;
     this.boatMass = 100;
+
+    this.waterDensity = .0001;
+
+    this.torqueMult = .000000005;
+
+
+    this.torqueOn = true;
+
     // ====================================================================
 
     // Which pieces of the cloth are being held up?

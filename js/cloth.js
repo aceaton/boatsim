@@ -515,18 +515,18 @@ Cloth.prototype.update = function(deltaT,com) {
   // ----------- Our reference solution uses 3 lines of code.
 
   // aggregate force and torque from sail points of contact
-  fTot = new THREE.Vector3(0,0,0);
-  tTot = new THREE.Vector3(0,0,0);
+  let fTot = new THREE.Vector3(0,0,0);
+  let tTot = new THREE.Vector3(0,0,0);
 
   for (let i = 0; i < particles.length; i++) {
-    f = particles[i].integrate(deltaT);
+    let f = particles[i].integrate(deltaT);
     if (f != null) {
       let disp = new THREE.Vector3().subVectors(particles[i].position,com);
       tTot.add(disp.cross(f));
       fTot.add(f);
     }
   }
-  return fTot,tTot;
+  return [fTot,tTot];
   // ----------- STUDENT CODE END ------------
 };
 
