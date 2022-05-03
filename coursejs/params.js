@@ -52,6 +52,8 @@ class Params {
     this.restDistanceH = this.sailWidth/this.sailHeight;
     this.restDistanceS = Math.sqrt(this.restDistanceV**2 + this.restDistanceH**2); // natural distance multiplier of diagonal springs
 
+    this.springStrength = 0.01;
+    // ========================================
 
     this.xSegs = Math.round(this.fabricLength / this.restDistance); // how many particles wide is the cloth
     this.ySegs = Math.round(this.fabricLength / this.restDistance); // how many particles tall is the cloth
@@ -66,7 +68,7 @@ class Params {
 
     // wind comes along the x axis
 
-    this.sailAngle = 0;
+    this.sailAngle = 45;
     // ====================================================================
 
     // Which pieces of the cloth are being held up?

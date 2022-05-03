@@ -76,10 +76,10 @@ let initParameterizedPosition = function(u,v,vec) {
 
 function liftCoeff(angleDegrees) {
   let d = angleDegrees;
+  if (d <= 16) return 0;
   return .004266*d**4 -.10058*d**3 + 1.426*d**2 - 10.54*d + 28.64 - .0001160 * d**5 +.000002075*d**6 - 2.433e-8*d**7 + 1.800e-10*d**8 - 7.626e-13*d**9 + 1.412e-15*d**10;
 }
 
-// console.log("20: " + liftCoeff(20));
 
 /***************************** CONSTRAINT *****************************/
 function Constraint(p1, p2, distance) {
@@ -105,9 +105,11 @@ Constraint.prototype.enforce = function() {
   var vCorr = new THREE.Vector3(0,0,0);
   vCorr = vAB.multiplyScalar(.5*diff/l);
   // console.log(vCorr);
-
+  // this.p1.addForce(vCorr.multiplyScalar(SceneParams.springStrength));
+  // this.p2.addForce(vCorr.multiplyScalar(-1));
   this.p1.position.add(vCorr);
   this.p2.position.sub(vCorr);
+
   // ----------- STUDENT CODE END ------------
 };
 
@@ -387,7 +389,7 @@ Cloth.prototype.applyWind = function(windStrength) {
   //
   // One suggestion is to use sinusoidal functions. Play around with the
   // constant factors to find an appealing result!
-  let windForce = new THREE.Vector3(0, 0, 1).normalize().multiplyScalar(windStrength);
+  let windForce = new THREE.Vector3(1, 0, 0).normalize().multiplyScalar(windStrength);
 
   // ----------- Our reference solution uses 6 lines of code.
   let newStrength = Math.sin(time/1000)*10;
@@ -475,6 +477,7 @@ Cloth.prototype.applyCustom = function(strength, rate) {
 
   let lift = liftCoeff(SceneParams.sailAngle)*SceneParams.windStrength**2*SceneParams.liftC*SceneParams.sailHeight*SceneParams.sailWidth/2;
   let liftForce = new THREE.Vector3().copy(dir).multiplyScalar(lift)
+  console.log(lift);
 
   for (let particle of particles) {
     particle.addForce(liftForce);
