@@ -105,10 +105,10 @@ Constraint.prototype.enforce = function() {
   var vCorr = new THREE.Vector3(0,0,0);
   vCorr = vAB.multiplyScalar(.5*diff/l);
   // console.log(vCorr);
-  // this.p1.addForce(vCorr.multiplyScalar(SceneParams.springStrength));
-  // this.p2.addForce(vCorr.multiplyScalar(-1));
-  this.p1.position.add(vCorr);
-  this.p2.position.sub(vCorr);
+  this.p1.addForce(vCorr.multiplyScalar(SceneParams.springStrength));
+  this.p2.addForce(vCorr.multiplyScalar(-1));
+  // this.p1.position.add(vCorr);
+  // this.p2.position.sub(vCorr);
 
   // ----------- STUDENT CODE END ------------
 };
@@ -389,7 +389,7 @@ Cloth.prototype.applyWind = function(windStrength) {
   //
   // One suggestion is to use sinusoidal functions. Play around with the
   // constant factors to find an appealing result!
-  let windForce = new THREE.Vector3(1, 0, 0).normalize().multiplyScalar(windStrength);
+  let windForce = new THREE.Vector3(1, 0, 0).normalize().multiplyScalar(windStrength/100);
 
   // ----------- Our reference solution uses 6 lines of code.
   let newStrength = Math.sin(time/1000)*10;
@@ -470,14 +470,14 @@ Cloth.prototype.applyCustom = function(strength, rate) {
 
   // ----------- STUDENT CODE BEGIN ------------
   // ----------- Our reference solution uses 36 lines of code.
-  let angNew = (SceneParams.sailAngle/180+.5)*Math.PI;
+  let angNew = (SceneParams.sailAngle/180-.5)*Math.PI;
   let dir = new THREE.Vector3(Math.cos(angNew),0,Math.sin(angNew));
   dir.normalize();
   // WILL HAVE TO CHANGE WITH ANGLE PIVOT - TO DO
 
-  let lift = liftCoeff(SceneParams.sailAngle)*SceneParams.windStrength**2*SceneParams.liftC*SceneParams.sailHeight*SceneParams.sailWidth/2;
+  let lift = liftCoeff(SceneParams.sailAngle)*SceneParams.windStrength**2/10000*SceneParams.liftC*SceneParams.sailHeight*SceneParams.sailWidth/2;
   let liftForce = new THREE.Vector3().copy(dir).multiplyScalar(lift)
-  console.log(lift);
+  // console.log(liftForce);
 
   for (let particle of particles) {
     particle.addForce(liftForce);
@@ -506,16 +506,27 @@ Cloth.prototype.applyForces = function() {
   }
 };
 
-Cloth.prototype.update = function(deltaT) {
+Cloth.prototype.update = function(deltaT,com) {
   if (!SceneParams.integrate) return;
   let particles = this.particles;
   // ----------- STUDENT CODE BEGIN ------------
   // For each particle in the cloth, have it update its position
   // by calling its integrate function.
   // ----------- Our reference solution uses 3 lines of code.
+
+  // aggregate force and torque from sail points of contact
+  let fTot = new THREE.Vector3(0,0,0);
+  let tTot = new THREE.Vector3(0,0,0);
+
   for (let i = 0; i < particles.length; i++) {
-    particles[i].integrate(deltaT);
+    let f = particles[i].integrate(deltaT);
+    if (f != null) {
+      let disp = new THREE.Vector3().subVectors(particles[i].position,com);
+      tTot.add(disp.cross(f));
+      fTot.add(f);
+    }
   }
+  return [fTot,tTot];
   // ----------- STUDENT CODE END ------------
 };
 
