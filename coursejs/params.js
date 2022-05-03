@@ -13,7 +13,7 @@ class Params {
     this.MASS = 0.1;
 
     // Acceleration due to gravity, scaled up experimentally for effect.
-    this.GRAVITY = 9.8*10;// * 140;
+    this.GRAVITY = 9.8;// * 140;
 
     // The timestep (or deltaT used in integration of the equations of motion)
     // Smaller values result in a more stable simulation, but becomes slower.
@@ -41,7 +41,7 @@ class Params {
     this.p1z = 0;
 
     // coefficient in the lift equation accounting for fluid density (of air) and unit changes and 1/2 factor
-    this.liftC = .000001;
+    this.liftC = .0005;
 
     this.restDistance = this.sailHeight/this.d;
     this.restDistanceB = 2; // natural distance multiplier of 2-apart springs
@@ -52,7 +52,7 @@ class Params {
     this.restDistanceH = this.sailWidth/this.sailHeight;
     this.restDistanceS = Math.sqrt(this.restDistanceV**2 + this.restDistanceH**2); // natural distance multiplier of diagonal springs
 
-    this.springStrength = 0.01;
+    this.springStrength = 10;
     // ========================================
 
     this.xSegs = Math.round(this.fabricLength / this.restDistance); // how many particles wide is the cloth
@@ -65,10 +65,15 @@ class Params {
     this.showConstraints = false; // should constraints be drawn to screen?
     this.allowShownConstraintMovement = false; // should drawn constraints be locked in place?
 
-
     // wind comes along the x axis
 
+    // BOAT PARAMS
+    this.boatAngle = 50;
     this.sailAngle = 45;
+
+    // position of the COM relative to the origin (in the direction of boat angle)
+    this.boatCOM = new THREE.Vector3(0,-100,0);
+    this.boatMass = 100;
     // ====================================================================
 
     // Which pieces of the cloth are being held up?

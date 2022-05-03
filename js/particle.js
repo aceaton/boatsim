@@ -7,6 +7,8 @@ function Particle(x, y, z, mass) {
   this.previous = new THREE.Vector3(); // previous
   this.original = new THREE.Vector3(); // original
 
+  this.locked = false;
+
   initParameterizedPosition(x, y, this.position);
   initParameterizedPosition(x, y, this.previous);
   initParameterizedPosition(x, y, this.original);
@@ -54,7 +56,11 @@ Particle.prototype.integrate = function(deltaT) {
   //     and store it into this.position.
   // (3) Reset the net force acting on the particle (i.e. make it (0, 0, 0) again).
   // ----------- Our reference solution uses 13 lines of code.
-  
+  if (this.locked) {
+    let f = this.netForce;
+    this.netForce = new THREE.Vector3(0,0,0);
+    return f;
+  }
   var p = new THREE.Vector3(0,0,0).subVectors(this.position, this.previous);
   this.previous = this.position;
   p.multiplyScalar(1-DAMPING);

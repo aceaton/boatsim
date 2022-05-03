@@ -3,12 +3,15 @@ var Sim = Sim || {};
 var randomPoints;
 var cloth;
 
+var boat;
+
 Sim.init = function() {
   // Points by which cloth will be suspended in "Random" pinning mode.
   randomPoints = [];
 
   // The cloth object being simulated.
   cloth = new Cloth(SceneParams.d, SceneParams.d, SceneParams.fabricLength);
+  boat = new Boat(SceneParams.boatAngle, cloth);
 
   Sim.update();
 }
@@ -23,11 +26,8 @@ Sim.simulate = function() {
     Sim.updateSpherePosition(Scene.sphere);
   }
 
-  // Apply all relevant forces to the cloth's particles
-  cloth.applyForces();
-
-  // For each particle, perform Verlet integration to compute its new position
-  cloth.update(SceneParams.TIMESTEP);
+  // applies forces to the cloth, and updates the cloth, and uses the leftover forces to update the boat
+  boat.applyForces();
 
   // Handle collisions with other objects in the scene
   // cloth.handleCollisions();
@@ -42,6 +42,8 @@ Sim.simulate = function() {
 
   // Pin constraints
   Sim.enforcePinConstraints();
+
+  
 }
 
 /****** Helper functions for the simulation ******/
@@ -72,10 +74,10 @@ Sim.enforcePinConstraints = function() {
   let d = SceneParams.d;
   if (SceneParams.pinned === "Classic") {
   for (let i = 0; i <= d; i++) {
-    particles[cloth.index(0, i)].lockToOriginal();
+    particles[cloth.index(0, i)].locked=true;//lockToOriginal();
    }
   // pin the clew to boom end 
-  particles[cloth.index(d, d)].lockToOriginal();
+  particles[cloth.index(d, d)].locked=true;//lockToOriginal();
   }
   
 
