@@ -37,7 +37,7 @@ class Params {
     this.sailHeight = 490;
 
     this.p1x = 0;
-    this.p1y = -249 + 630;
+    this.p1y = -249 + 630 + 120;
     this.p1z = 0;
 
     // coefficient in the lift equation accounting for fluid density (of air) and unit changes and 1/2 factor

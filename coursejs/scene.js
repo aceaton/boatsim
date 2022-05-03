@@ -33,6 +33,7 @@ Scene.init = function() {
   Scene.sphere = Scene.buildSphere();
   Scene.box    = Scene.buildBox();
   Scene.arrow = Scene.buildArrow();
+  Scene.boat = Scene.buildBoat();
 
   Scene.update();
 }
@@ -336,13 +337,64 @@ Scene.buildMast = function() {
   let mast = new THREE.Mesh(mastGeo.geometry, mastGeo.material);
   mast.position.x = 0;
   mast.position.z = 0;
-  mast.position.y = SceneParams.groundY;
+  mast.position.y = -249 + 120;
   mast.receiveShadow = true;
   mast.castShadow = true;
   mastGeo.meshes.push(mast);
   Scene.scene.add(mast);
 
   return mastGeo;
+}
+
+Scene.buildBoat = function() {
+  let mainHullGeo = {};
+  mainHullGeo.meshes = [];
+  mainHullGeo.centerwidth = 163;
+  mainHullGeo.sternwidth = 140;
+  mainHullGeo.mainLength = 295;
+  mainHullGeo.radialSegments = 8;
+  mainHullGeo.thetaLength = Math.PI;
+  
+  mainHullGeo.geometry = new THREE.CylinderGeometry(mainHullGeo.centerwidth, mainHullGeo.sternwidth, mainHullGeo.mainLength, mainHullGeo.radialSegments, 1, false, 0, mainHullGeo.thetaLength);
+  // var geometry = new THREE.CylinderGeometry(100,100,150, 8, 1, false, 0, Math.PI);
+  mainHullGeo.geometry.rotateZ(-Math.PI/2);
+  mainHullGeo.geometry.rotateY(Math.PI);
+  mainHullGeo.geometry.translate((mainHullGeo.mainLength / 2),0,0);
+  mainHullGeo.material = new THREE.MeshPhongMaterial({
+    color: 0x333333,//0xffffff,
+    specular: 0x111111,
+    shininess: 100,
+    side: THREE.DoubleSide,
+  });
+
+  let mainHull = new THREE.Mesh(mainHullGeo.geometry, mainHullGeo.material);
+  mainHull.position.x = 0;
+  mainHull.position.z = 0;
+  mainHull.position.y = -249 + 140;
+  mainHull.receiveShadow = true;
+  mainHull.castShadow = true;
+  mainHullGeo.meshes.push(mainHull);
+  Scene.scene.add(mainHull);
+
+  // the bow
+
+  // inspired by https://github.com/AlexP11223/Three.js_IslandCastle
+  var bowGeo = new THREE.ConeGeometry(mainHullGeo.centerwidth, 125, mainHullGeo.radialSegments, 1, false, 0, mainHullGeo.thetaLength);
+  bowGeo.rotateY(Math.PI);
+  bowGeo.rotateZ(Math.PI/2);
+  bowGeo.translate(-(125 / 2),0,0);
+  let bow = new THREE.Mesh(bowGeo, mainHullGeo.material);
+  bow.position.x = 0;
+  bow.position.z = 0;
+  bow.position.y = -249 + 140;
+  bow.receiveShadow = true;
+  bow.castShadow = true;
+  mainHullGeo.meshes.push(bow);
+  mainHull.add(bow);
+  Scene.scene.add(bow);
+
+  return mainHullGeo;
+
 }
 
 Scene.buildArrow = function() {
@@ -392,7 +444,7 @@ Scene.buildBoom = function() {
   let boom = new THREE.Mesh(boomGeo.geometry, boomGeo.material);
   boom.position.x = 0;
   boom.position.z = 0;
-  boom.position.y = -10;
+  boom.position.y = -10 + 120;
   // console.log(SceneParams.sailAngle);
   // console.log(SceneParams.sailAngle/180*Math.PI);
   boom.rotateY(-SceneParams.sailAngle/180*Math.PI);
@@ -469,6 +521,7 @@ Scene.showWireframe = function(flag) {
   Scene.cloth.material.wireframe = flag;
   Scene.sphere.material.wireframe = flag;
   Scene.box.material.wireframe = flag;
+  Scene.boat.material.wireframe = flag;
 }
 
 // this part allows us to use an image for the cloth texture

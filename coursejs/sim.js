@@ -77,9 +77,6 @@ Sim.enforcePinConstraints = function() {
   // pin the clew to boom end 
   particles[cloth.index(d, d)].lockToOriginal();
   }
-  
-
-  
 
 
   /* // Special case for wave: keep one edge stationary while the opposing one oscillates
