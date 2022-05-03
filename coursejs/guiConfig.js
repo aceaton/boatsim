@@ -19,12 +19,8 @@ GuiConfig.dropdownOptions.objects = [
 ];
 
 GuiConfig.dropdownOptions.pinned = [
-  "None",
-  "Corners",
-  "OneEdge",
-  "TwoEdges",
-  "FourEdges",
-  "Random",
+  "Classic",
+  
 ];
 
 // Each entry of GuiConfig.defs will have one Gui element created for it.
