@@ -415,7 +415,9 @@ Scene.createConstraintLine = function(constraint) {
   let mats = Scene.constraintMaterials;
   let mat = mats[3]; // black
   let d = constraint.distance;
+  // console.log(SceneParams);
   let rest = SceneParams.restDistance;
+  // console.log(SceneParams.restDistanceS);
   let restB = rest * SceneParams.restDistanceB;
   let restS = rest * SceneParams.restDistanceS;
   if      (d == rest)   mat = mats[0];

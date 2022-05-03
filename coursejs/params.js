@@ -28,6 +28,19 @@ class Params {
     // Natural resting distances
     // (these are explicitly redefined in cloth.js)
     // this.restDistance = 20; // the natural resting distance of adjacent springs
+
+    // NEW PARAMETERS - start of the cloth and divisions
+    // ====================================================================
+    this.d = 20;
+    // this.p1 = new THREE.Vector3(-250,500,0);
+    this.sailWidth = 240;
+    this.sailHeight = 490;
+
+    this.p1x = 0;
+    this.p1y = -249 + 630;
+    this.p1z = 0;
+
+
     this.restDistance = this.sailHeight/this.d;
     this.restDistanceB = 2; // natural distance multiplier of 2-apart springs
     // this.restDistanceS = Math.sqrt(2); // natural distance multiplier of diagonal springs
@@ -48,16 +61,6 @@ class Params {
     this.showConstraints = false; // should constraints be drawn to screen?
     this.allowShownConstraintMovement = false; // should drawn constraints be locked in place?
 
-    // NEW PARAMETERS - start of the cloth and divisions
-    // ====================================================================
-    this.d = 20;
-    // this.p1 = new THREE.Vector3(-250,500,0);
-    this.sailWidth = 240;
-    this.sailHeight = 490;
-
-    this.p1x = 0;
-    this.p1y = -249 + 630;
-    this.p1z = 0;
 
     // wind comes along the x axis
 
@@ -147,8 +150,8 @@ class Params {
   // (Re)define all the properties that are derived from others
   // To be called on page reload, after URL params are read in.
   update() {
-    this.xSegs = Math.round(this.fabricLength / this.restDistance);
-    this.ySegs = Math.round(this.fabricLength / this.restDistance);
+    // this.xSegs = Math.round(this.fabricLength / this.restDistance);
+    // this.ySegs = Math.round(this.fabricLength / this.restDistance);
 
 
     // Move these to Scene.update();

@@ -24,7 +24,7 @@ Sim.simulate = function() {
   }
 
   // Apply all relevant forces to the cloth's particles
-  // cloth.applyForces();
+  cloth.applyForces();
 
   // For each particle, perform Verlet integration to compute its new position
   cloth.update(SceneParams.TIMESTEP);
@@ -38,10 +38,10 @@ Sim.simulate = function() {
   // }
 
   // Apply cloth constraints
-  // cloth.enforceConstraints();
+  cloth.enforceConstraints();
 
   // Pin constraints
-  // Sim.enforcePinConstraints();
+  Sim.enforcePinConstraints();
 }
 
 /****** Helper functions for the simulation ******/
