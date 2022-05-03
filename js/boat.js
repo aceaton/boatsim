@@ -161,5 +161,6 @@ Boat.prototype.applyGravity = function() {
 
 Boat.prototype.applyKeelForce = function() {
     // this.torque.add(new THREE.Vector3().copy(this.ang).multiplyScalar(50));
+    
 }
 

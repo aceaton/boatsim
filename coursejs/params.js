@@ -85,7 +85,7 @@ class Params {
 
     this.accelMult = 10000;
 
-    this.torqueOn = true;
+    this.torqueOn = false;
 
     // ====================================================================
 
