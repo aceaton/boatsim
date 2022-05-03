@@ -148,7 +148,7 @@ Scene.buildCloth = function() {
   for (let i = 0; i <= d; i++) {
     for (let j = 0; j <= i; j++) {
       let len = -i*h/d;
-      let ang = SceneParams.sailAngle/180*Math.pi;
+      let ang = SceneParams.sailAngle/180*Math.PI;
       g.vertices.push(new THREE.Vector3().addVectors(p1,new THREE.Vector3(j*w/d,len*Math.cos(ang),len*Math.sin(ang))));
       // console.log(SceneParams.p1);
       // console.log(SceneParams.d);
@@ -362,10 +362,9 @@ Scene.buildBoom = function() {
   boom.position.x = 0;
   boom.position.z = 0;
   boom.position.y = -10;
-  boom.rotateY(SceneParams.sailAngle/180*Math.pi);
-
   boom.receiveShadow = false;
   boom.castShadow = false;
+  boom.rotation.y = -SceneParams.sailAngle/180*Math.PI;
   boomGeo.meshes.push(boom);
   Scene.scene.add(boom);
 
