@@ -69,6 +69,7 @@ Sim.pinCloth = function(choice) {
 Sim.enforcePinConstraints = function() {
   // pin the main sail head and all points down the luff to the mast! 
   let particles = cloth.particles;
+  let d = SceneParams.d;
   if (SceneParams.pinned === "Classic") {
   for (let i = 0; i <= d; i++) {
     particles[cloth.index(0, i)].lockToOriginal();

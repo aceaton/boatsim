@@ -13,7 +13,7 @@ class Params {
     this.MASS = 0.1;
 
     // Acceleration due to gravity, scaled up experimentally for effect.
-    this.GRAVITY = 9.8 * 140;
+    this.GRAVITY = 9.8*10;// * 140;
 
     // The timestep (or deltaT used in integration of the equations of motion)
     // Smaller values result in a more stable simulation, but becomes slower.
@@ -40,6 +40,8 @@ class Params {
     this.p1y = -249 + 630;
     this.p1z = 0;
 
+    // coefficient in the lift equation accounting for fluid density (of air) and unit changes and 1/2 factor
+    this.liftC = .000001;
 
     this.restDistance = this.sailHeight/this.d;
     this.restDistanceB = 2; // natural distance multiplier of 2-apart springs
@@ -64,7 +66,7 @@ class Params {
 
     // wind comes along the x axis
 
-    this.sailAngle = 45;
+    this.sailAngle = 0;
     // ====================================================================
 
     // Which pieces of the cloth are being held up?
@@ -116,7 +118,7 @@ class Params {
     this.wireframe = true;  // should meshes render as wireframes?
     this.rotate = false;    // Should the camera auto-rotate?
 
-    this.clothColor = 0xaa2929;     // base color of cloth
+    this.clothColor = 0xaaaaaa;//0xaa2929;     // base color of cloth
     this.clothSpecular = 0x030303;  // reflection color of cloth
 
     this.groundColor = 0x404761;    // base color of ground
@@ -129,7 +131,7 @@ class Params {
     this.clothTexture = "maze.png";
 
     this.showGroundTexture = false;
-    this.groundTexture = "grasslight-big.jpg";
+    this.groundTexture = "water.jpg";
 
     // ====================================================================
     //                Video recording properties

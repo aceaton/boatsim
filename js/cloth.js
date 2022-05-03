@@ -94,11 +94,18 @@ Constraint.prototype.enforce = function() {
   // positions based on their current distance relative to their desired rest
   // distance.
   // ----------- Our reference solution uses 10 lines of code.
+  // this.p1.previous = this.p1.position;
+  // this.p2.previous = this.p2.position;
+  // console.log(this.p1,this.p2);
   var vAB = new THREE.Vector3(0,0,0);
   vAB.subVectors(this.p2.position, this.p1.position);
-  var diff = vAB.length() - this.distance;
+  // console.log(vAB);
+  let l = vAB.length();
+  var diff = l - this.distance;
   var vCorr = new THREE.Vector3(0,0,0);
-  vCorr = vAB.multiplyScalar(.5*diff/vAB.length());
+  vCorr = vAB.multiplyScalar(.5*diff/l);
+  // console.log(vCorr);
+
   this.p1.position.add(vCorr);
   this.p2.position.sub(vCorr);
   // ----------- STUDENT CODE END ------------
@@ -184,11 +191,12 @@ function Cloth(w, h, l) {
       if (u < v-1) {
         // constraints on double horizontal edges
         constraints.push(
-          new Constraint(particles[index(u,v)],particles[index(u+2,v)],SceneParams.restDistance*SceneParams.restDistanceD*SceneParams.restDistanceH)
+          new Constraint(particles[index(u,v)],particles[index(u+2,v)],SceneParams.restDistance*SceneParams.restDistanceB*SceneParams.restDistanceH)
         );
+        // console.log(particles.length, index(u,v), index(u+2, v), index(u,v-2));
         // constraints on double vertical edges
         constraints.push(
-          new Constraint(particles[index(u,v)],particles[index(u,v-2)],SceneParams.restDistance*SceneParams.restDistanceD*SceneParams.restDistanceV)
+          new Constraint(particles[index(u,v)],particles[index(u,v-2)],SceneParams.restDistance*SceneParams.restDistanceB*SceneParams.restDistanceV)
         );
       } 
     }
@@ -379,16 +387,16 @@ Cloth.prototype.applyWind = function(windStrength) {
   //
   // One suggestion is to use sinusoidal functions. Play around with the
   // constant factors to find an appealing result!
-  let windForce = new THREE.Vector3(1, 1, 1).normalize().multiplyScalar(windStrength);
+  let windForce = new THREE.Vector3(0, 0, 1).normalize().multiplyScalar(windStrength);
 
   // ----------- Our reference solution uses 6 lines of code.
   let newStrength = Math.sin(time/1000)*10;
   // console.log(newStrength);
   let st = 10;
   // windForce.multiplyScalar(newStrength);
-  windForce.x *= Math.sin(time/1000)*st;
-  windForce.y *= Math.sin(time/340)*st;
-  windForce.z *= Math.sin(time/534)*st;
+  // windForce.x *= Math.sin(time/1000)*st;
+  // windForce.y *= Math.sin(time/340)*st;
+  // windForce.z *= Math.sin(time/534)*st;
 
   // ----------- STUDENT CODE END ------------
 
@@ -460,6 +468,17 @@ Cloth.prototype.applyCustom = function(strength, rate) {
 
   // ----------- STUDENT CODE BEGIN ------------
   // ----------- Our reference solution uses 36 lines of code.
+  let angNew = (SceneParams.sailAngle/180+.5)*Math.PI;
+  let dir = new THREE.Vector3(Math.cos(angNew),0,Math.sin(angNew));
+  dir.normalize();
+  // WILL HAVE TO CHANGE WITH ANGLE PIVOT - TO DO
+
+  let lift = liftCoeff(SceneParams.sailAngle)*SceneParams.windStrength**2*SceneParams.liftC*SceneParams.sailHeight*SceneParams.sailWidth/2;
+  let liftForce = new THREE.Vector3().copy(dir).multiplyScalar(lift)
+
+  for (let particle of particles) {
+    particle.addForce(liftForce);
+  }
   // ----------- STUDENT CODE END ------------
 }
 
@@ -526,9 +545,9 @@ Cloth.prototype.enforceConstraints = function() {
   // ----------- STUDENT CODE BEGIN ------------
   // Enforce all constraints in the cloth.
   // ----------- Our reference solution uses 3 lines of code.
-  // for (let c = 0; c < constraints.length; c++) {
-  //   constraints[c].enforce();
-  // }
+  for (let c = 0; c < constraints.length; c++) {
+    constraints[c].enforce();
+  }
   // ----------- STUDENT CODE END ------------
 };
 

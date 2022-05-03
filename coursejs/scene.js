@@ -32,6 +32,7 @@ Scene.init = function() {
   Scene.boom = Scene.buildBoom();
   Scene.sphere = Scene.buildSphere();
   Scene.box    = Scene.buildBox();
+  Scene.arrow = Scene.buildArrow();
 
   Scene.update();
 }
@@ -187,22 +188,23 @@ Scene.buildCloth = function() {
   // this part allows us to use an image for the cloth texture
   // can include transparent parts
   // cloth.texture = Scene.loader.load( "textures/patterns/circuit_pattern.png" );
-  // cloth.texture.wrapS = cloth.texture.wrapT = THREE.RepeatWrapping;
-  // cloth.texture.anisotropy = 16;
-  // cloth.material.map = cloth.texture;
-  //
-  // // more stuff needed for the texture
-  // var uniforms = { texture:  { type: "t", value: cloth.texture } };
-  // var vertexShader = document.getElementById( 'vertexShaderDepth' ).textContent;
-  // var fragmentShader = document.getElementById( 'fragmentShaderDepth' ).textContent;
-  //
-  // // more stuff needed for texture
-  // cloth.mesh.customDepthMaterial = new THREE.ShaderMaterial( {
-  //   uniforms: uniforms,
-  //   vertexShader: vertexShader,
-  //   fragmentShader: fragmentShader,
-  //   side: THREE.DoubleSide
-  // } );
+  cloth.texture = Scene.loader.load("textures/patterns/" + SceneParams.clothTexture);
+  cloth.texture.wrapS = cloth.texture.wrapT = THREE.RepeatWrapping;
+  cloth.texture.anisotropy = 16;
+  cloth.material.map = cloth.texture;
+  
+  // more stuff needed for the texture
+  var uniforms = { texture:  { type: "t", value: cloth.texture } };
+  var vertexShader = document.getElementById( 'vertexShaderDepth' ).textContent;
+  var fragmentShader = document.getElementById( 'fragmentShaderDepth' ).textContent;
+  
+  // more stuff needed for texture
+  cloth.mesh.customDepthMaterial = new THREE.ShaderMaterial( {
+    uniforms: uniforms,
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader,
+    side: THREE.DoubleSide
+  } );
 
   // whenever we make something, we need to also add it to the scene
   Scene.scene.add(cloth.mesh); // add cloth to the scene
@@ -324,7 +326,7 @@ Scene.buildMast = function() {
   // Position the poles on the "floor" of their coordinate space
   mastGeo.geometry.translate(0,630/2,0);
   mastGeo.material = new THREE.MeshPhongMaterial({
-    color: 0xffffff,
+    color: 0x333333,//0xffffff,
     specular: 0x111111,
     shininess: 100,
     side: THREE.DoubleSide,
@@ -335,14 +337,43 @@ Scene.buildMast = function() {
   mast.position.x = 0;
   mast.position.z = 0;
   mast.position.y = SceneParams.groundY;
-  mast.receiveShadow = false;
-  mast.castShadow = false;
+  mast.receiveShadow = true;
+  mast.castShadow = true;
   mastGeo.meshes.push(mast);
   Scene.scene.add(mast);
 
   return mastGeo;
 }
 
+Scene.buildArrow = function() {
+  let arrow = {};
+  arrow.length = 100;
+  arrow.meshes = [];
+  arrow.geometry = new THREE.BoxGeometry(arrow.length, 10, 5);
+  arrow.geometry.translate(-200, -0, 0);
+
+  arrow.material = new THREE.MeshPhongMaterial({
+    color: 0xee0000,//0xffffff,
+    specular: 0x888888,//0x111111,
+    shininess: 100,
+    side: THREE.DoubleSide,
+  });
+  
+  let ar = new THREE.Mesh(arrow.geometry, arrow.material);
+  ar.position.x = -100;
+  ar.position.z = 0;
+  ar.position.y = -10;
+  // console.log(SceneParams.sailAngle);
+  // console.log(SceneParams.sailAngle/180*Math.PI);
+  // boom.rotateY(-SceneParams.sailAngle/180*Math.PI);
+
+  ar.receiveShadow = false;
+  ar.castShadow = false;
+  arrow.meshes.push(ar);
+  Scene.scene.add(ar);
+
+  return arrow;
+}
 
 Scene.buildBoom = function() {
 
@@ -352,8 +383,8 @@ Scene.buildBoom = function() {
   boomGeo.geometry = new THREE.BoxGeometry(boomGeo.length, 10, 5);
   boomGeo.geometry.translate((240/2),-100,0);
   boomGeo.material = new THREE.MeshPhongMaterial({
-    color: 0xffffff,
-    specular: 0x111111,
+    color: 0x333333,//0xffffff,
+    specular: 0x888888,//0x111111,
     shininess: 100,
     side: THREE.DoubleSide,
   });
@@ -362,10 +393,12 @@ Scene.buildBoom = function() {
   boom.position.x = 0;
   boom.position.z = 0;
   boom.position.y = -10;
-  boom.rotateY(SceneParams.sailAngle/180*Math.pi);
+  // console.log(SceneParams.sailAngle);
+  // console.log(SceneParams.sailAngle/180*Math.PI);
+  boom.rotateY(-SceneParams.sailAngle/180*Math.PI);
 
-  boom.receiveShadow = false;
-  boom.castShadow = false;
+  boom.receiveShadow = true;
+  boom.castShadow = true;
   boomGeo.meshes.push(boom);
   Scene.scene.add(boom);
 

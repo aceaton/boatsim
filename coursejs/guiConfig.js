@@ -57,6 +57,12 @@ GuiConfig.defs = [
     name: "auto rotate",
     param: "rotate",
   },
+  {
+    name: "angle",
+    param: "sailAngle",
+    range: [-90,90,5],
+    onChange: Sim.restartCloth,
+  },
   /***************************************************
    *             Forces folder
    ***************************************************/
@@ -118,33 +124,33 @@ GuiConfig.defs = [
   /***************************************************
    *             Scene folder
    ***************************************************/
-  {
-    folderName: "Scene",
-    name: "object",
-    param: "object",
-    dropdownOptions: GuiConfig.dropdownOptions.objects,
-    defaultOption: GuiConfig.dropdownOptions.objects[0],
-    onChange: Sim.placeObject,
-  },
-  {
-    folderName: "Scene",
-    name: "friction",
-    param: "friction",
-    range: [0,1,0.001],
-  },
-  {
-    folderName: "Scene",
-    name: "moving sphere",
-    param: "movingSphere",
-  },
-  {
-    folderName: "Scene",
-    name: "pinned",
-    param: "pinned",
-    dropdownOptions: GuiConfig.dropdownOptions.pinned,
-    defaultOption: GuiConfig.dropdownOptions.pinned[1],
-    onChange: Sim.pinCloth,
-  },
+  // {
+  //   folderName: "Scene",
+  //   name: "object",
+  //   param: "object",
+  //   dropdownOptions: GuiConfig.dropdownOptions.objects,
+  //   defaultOption: GuiConfig.dropdownOptions.objects[0],
+  //   onChange: Sim.placeObject,
+  // },
+  // {
+  //   folderName: "Scene",
+  //   name: "friction",
+  //   param: "friction",
+  //   range: [0,1,0.001],
+  // },
+  // {
+  //   folderName: "Scene",
+  //   name: "moving sphere",
+  //   param: "movingSphere",
+  // },
+  // {
+  //   folderName: "Scene",
+  //   name: "pinned",
+  //   param: "pinned",
+  //   dropdownOptions: GuiConfig.dropdownOptions.pinned,
+  //   defaultOption: GuiConfig.dropdownOptions.pinned[1],
+  //   onChange: Sim.pinCloth,
+  // },
 
   /***************************************************
    *             Behavior folder
