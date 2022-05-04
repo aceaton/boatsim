@@ -138,7 +138,7 @@ class Params {
     // ====================================================================
     //              Rendering properties of the scene
     // ====================================================================
-    this.wireframe = true;  // should meshes render as wireframes?
+    this.wireframe = false;  // should meshes render as wireframes?
     this.rotate = false;    // Should the camera auto-rotate?
 
     this.clothColor = 0xaaaaaa;//0xaa2929;     // base color of cloth
@@ -153,7 +153,7 @@ class Params {
     this.showClothTexture = false;
     this.clothTexture = "maze.png";
 
-    this.showGroundTexture = false;
+    this.showGroundTexture = true;
     this.groundTexture = "water.jpg";
 
     // ====================================================================
