@@ -102,7 +102,7 @@ Boat.prototype.applyForcesAndUpdate = function() {
     this.applyGravity();
   }
   
-  this.applyKeelForce(upd);
+  this.applyKeelForce();
 
   //console.log(this.netForce);
   //console.log(this.netForce.multiplyScalar(deltaT*deltaT/this.mass));
@@ -164,7 +164,7 @@ Boat.prototype.applyGravity = function() {
 
 };
 
-Boat.prototype.applyKeelForce = function(upd) {
+Boat.prototype.applyKeelForce = function() {
     // this.torque.add(new THREE.Vector3().copy(this.ang).multiplyScalar(50));
     // force from the water onto the keel
     // perpendicular to boat component of the sail force
