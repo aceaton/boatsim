@@ -83,9 +83,10 @@ class Params {
 
     this.torqueMult = .000000005;
 
-    this.accelMult = 15000;
+    this.accelMult = 8;//5000;
 
-    this.slip = .1;
+    this.slip = .05;
+    // current
 
     this.torqueOn = false;
 

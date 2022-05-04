@@ -101,14 +101,15 @@ if (SceneParams.gravity) {
 
 this.applyKeelForce();
 
-console.log(this.netForce);
-console.log(this.netForce.multiplyScalar(deltaT*deltaT/this.mass));
+// console.log(this.netForce);
+// console.log(this.netForce.multiplyScalar(deltaT*deltaT/this.mass));
+// this.netForce.multiplyScalar(deltaT*deltaT/this.mass);
 
 //   console.log(this.torque);
 // integration
 const DAMPING = SceneParams.DAMPING;
 var p = new THREE.Vector3(0,0,0).subVectors(this.position, this.previous);
-console.log(p);
+// console.log(p);
 this.previous = this.position;
 p.multiplyScalar(1-DAMPING);
 p.add(this.position);
@@ -117,7 +118,7 @@ this.position = p;
 this.netForce = new THREE.Vector3(0,0,0);
 
 let tr = new THREE.Vector3().subVectors(this.position, this.previous);
-console.log(tr);
+// console.log(tr);
 this.translate(tr);
 //   console.log(tr);
 

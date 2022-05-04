@@ -396,7 +396,7 @@ Cloth.prototype.applyWind = function(windStrength) {
   // console.log(newStrength);
   let st = 10;
   // windForce.multiplyScalar(newStrength);
-  // windForce.x *= Math.sin(time/1000)*st;
+  windForce.x *= Math.sin(time/1000)*st;
   // windForce.y *= Math.sin(time/340)*st;
   // windForce.z *= Math.sin(time/534)*st;
 
