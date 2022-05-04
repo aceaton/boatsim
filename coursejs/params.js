@@ -68,7 +68,7 @@ class Params {
     // wind comes along the x axis
 
     // BOAT PARAMS
-    this.boatAngle = 90;
+    this.boatAngle = 60;
     this.sailAngle = 45;
 
     // position of the COM relative to the origin (in the direction of boat angle)
@@ -83,7 +83,9 @@ class Params {
 
     this.torqueMult = .000000005;
 
-    this.accelMult = 10000;
+    this.accelMult = 15000;
+
+    this.slip = .1;
 
     this.torqueOn = false;
 
