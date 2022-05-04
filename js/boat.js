@@ -166,5 +166,5 @@ Boat.prototype.applyKeelForce = function() {
   let dir = new THREE.Vector3(this.ang.z, 0, -1*this.ang.x).normalize();
   let keelForce = dir.multiplyScalar(f.dot(dir)*(1-SceneParams.slip));
   f.sub(keelForce);
-  console.log(dir);
+  // console.log(dir);
 }

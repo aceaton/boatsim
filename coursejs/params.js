@@ -113,7 +113,7 @@ class Params {
     this.rainStrength = 6; // scalar multiplier for rain impulse magnitude
     this.rainRate = 5; // Number of droplets per fixed area per time step.
 
-    this.customForce = false; // Should the custom force be enabled?
+    this.customForce = true; // Should the custom force be enabled?
     this.customFStrength = 10; // custom strength parameter
     this.customFRate = 5; // custom rate parameter
 
