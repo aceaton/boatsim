@@ -68,7 +68,7 @@ class Params {
     // wind comes along the x axis
 
     // BOAT PARAMS
-    this.boatAngle = 90;
+    this.boatAngle = 60;
     this.sailAngle = 45;
 
     // position of the COM relative to the origin (in the direction of boat angle)
@@ -83,7 +83,10 @@ class Params {
 
     this.torqueMult = .000000005;
 
-    this.accelMult = 10000;
+    this.accelMult = 8;//5000;
+
+    this.slip = .05;
+    // current
 
     this.torqueOn = false;
 
@@ -111,7 +114,7 @@ class Params {
     this.rainStrength = 6; // scalar multiplier for rain impulse magnitude
     this.rainRate = 5; // Number of droplets per fixed area per time step.
 
-    this.customForce = false; // Should the custom force be enabled?
+    this.customForce = true; // Should the custom force be enabled?
     this.customFStrength = 10; // custom strength parameter
     this.customFRate = 5; // custom rate parameter
 
@@ -136,7 +139,7 @@ class Params {
     // ====================================================================
     //              Rendering properties of the scene
     // ====================================================================
-    this.wireframe = true;  // should meshes render as wireframes?
+    this.wireframe = false;  // should meshes render as wireframes?
     this.rotate = false;    // Should the camera auto-rotate?
 
     this.clothColor = 0xaaaaaa;//0xaa2929;     // base color of cloth
@@ -151,7 +154,7 @@ class Params {
     this.showClothTexture = false;
     this.clothTexture = "maze.png";
 
-    this.showGroundTexture = false;
+    this.showGroundTexture = true;
     this.groundTexture = "water.jpg";
 
     // ====================================================================
