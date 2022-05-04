@@ -105,6 +105,7 @@ class Params {
 
     this.wind = false; // Should the wind force be enabled?
     this.windStrength = 30; // scalar multiplier for wind force magnitude
+    this.windDirection = 45; // where the wind is coming from. THREE.Vector3(1,0,0) (directly down from north) is 0 for reference. 
 
     this.rain = false; // Should the rain impulse be enabled?
     this.rainStrength = 6; // scalar multiplier for rain impulse magnitude

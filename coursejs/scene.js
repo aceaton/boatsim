@@ -438,7 +438,7 @@ Scene.buildArrow = function() {
   arrow.meshes = [];
   arrow.geometry = new THREE.BoxGeometry(arrow.length, 10, 5);
   arrow.geometry.translate(-200, -0, 0);
-
+  arrow.geometry.rotateY(SceneParams.windDirection*(Math.PI/180));
   arrow.material = new THREE.MeshPhongMaterial({
     color: 0xee0000,//0xffffff,
     specular: 0x888888,//0x111111,

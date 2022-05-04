@@ -389,7 +389,13 @@ Cloth.prototype.applyWind = function(windStrength) {
   //
   // One suggestion is to use sinusoidal functions. Play around with the
   // constant factors to find an appealing result!
-  let windForce = new THREE.Vector3(1, 0, 0).normalize().multiplyScalar(windStrength/100);
+
+  //add wind direction depending on what user selects in the GUI 
+  let windAngle = SceneParams.windDirection * (Math.PI / 180);
+  let windDir = new THREE.Vector3(1, 0, 0);
+  let axisAngle = new THREE.Vector3(0, 1, 0);
+  windDir.applyAxisAngle(axisAngle, windAngle);
+  let windForce = windDir.normalize().multiplyScalar(windStrength/100);
 
   // ----------- Our reference solution uses 6 lines of code.
   let newStrength = Math.sin(time/1000)*10;

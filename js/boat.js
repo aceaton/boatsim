@@ -102,7 +102,7 @@ Boat.prototype.applyForcesAndUpdate = function() {
     this.applyGravity();
   }
   
-  this.applyKeelForce();
+  // this.applyKeelForce();
 
   //console.log(this.netForce);
   //console.log(this.netForce.multiplyScalar(deltaT*deltaT/this.mass));
@@ -117,7 +117,7 @@ Boat.prototype.applyForcesAndUpdate = function() {
   p.add(this.position);
   p.add(this.netForce.multiplyScalar(SceneParams.accelMult*deltaT*deltaT/this.mass));
   this.position = p;
-  this.netForce = new THREE.Vector3(0,0,0);
+ this.netForce = new THREE.Vector3(0,0,0);
   
   let tr = new THREE.Vector3().subVectors(this.position, this.previous);
   // console.log(tr);
@@ -159,7 +159,6 @@ Boat.prototype.applyBuoyancy = function() {
 // Apply a uniform force due to gravity
 Boat.prototype.applyGravity = function() {
     const GRAVITY = SceneParams.GRAVITY*50;
-    
     this.netForce.add(new THREE.Vector3(0,-1*GRAVITY*this.mass,0));
 
 };
@@ -171,7 +170,7 @@ Boat.prototype.applyKeelForce = function() {
     // also add torque such that it does not tip 
     // boat loc is forward vector of the boat
     // upd[0] is the force vector on the sail. 
-    if ((!upd[0].equals(new THREE.Vector3(0,0,0))) && upd[0]) {
+    /*if ((!upd[0].equals(new THREE.Vector3(0,0,0))) && upd[0]) {
     var test = new THREE.Vector3(0,0,0);
     console.log(test);
     console.log(upd[0]);
@@ -192,7 +191,7 @@ Boat.prototype.applyKeelForce = function() {
     console.log("netforce " + this.netForce);
     this.netForce.add(new THREE.Vector3().copy(keelForce));
     console.log("netforce " + this.netForce);
-    }
+    }*/
 
     
 }

@@ -85,6 +85,12 @@ GuiConfig.defs = [
   },
   {
     folderName: "Forces",
+    name: "wind direction",
+    param: "windDirection",
+    range: [0,359,1],
+  },
+  {
+    folderName: "Forces",
     name: "rain",
     param: "rain",
   },
