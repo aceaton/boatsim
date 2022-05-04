@@ -171,28 +171,31 @@ Boat.prototype.applyKeelForce = function() {
     // also add torque such that it does not tip 
     // boat loc is forward vector of the boat
     // upd[0] is the force vector on the sail. 
-    if ((!upd[0].equals(new THREE.Vector3(0,0,0))) && upd[0]) {
-    var test = new THREE.Vector3(0,0,0);
-    console.log(test);
-    console.log(upd[0]);
+    // if ((!upd[0].equals(new THREE.Vector3(0,0,0))) && upd[0]) {
+    // var test = new THREE.Vector3(0,0,0);
+    // console.log(test);
+    // console.log(upd[0]);
     
-    var theta = (Math.PI / 2) - this.position.angleTo(upd[0]);
-    console.log("below is upd");
-    console.log(upd[0]);
-    console.log("below is test3");
-    var test3 = this.position.angleTo(upd[0]);
-    console.log(test3);
-    var test2 = (this.position);
-    console.log("below is the position");
-    console.log(test2);
-    var keelForce = new THREE.Vector3().copy(upd[0]);
-    console.log("keelForce " + keelForce);
-    keelForce.multiplyScalar(-1 * Math.cos(theta));
-    console.log("keelForce " + keelForce);
-    console.log("netforce " + this.netForce);
-    this.netForce.add(new THREE.Vector3().copy(keelForce));
-    console.log("netforce " + this.netForce);
-    }
+    // var theta = (Math.PI / 2) - this.position.angleTo(upd[0]);
+    // console.log("below is upd");
+    // console.log(upd[0]);
+    // console.log("below is test3");
+    // var test3 = this.position.angleTo(upd[0]);
+    // console.log(test3);
+    // var test2 = (this.position);
+    // console.log("below is the position");
+    // console.log(test2);
+    // var keelForce = new THREE.Vector3().copy(upd[0]);
+    // console.log("keelForce " + keelForce);
+    // keelForce.multiplyScalar(-1 * Math.cos(theta));
+    // console.log("keelForce " + keelForce);
+    // console.log("netforce " + this.netForce);
+    // this.netForce.add(new THREE.Vector3().copy(keelForce));
+    // console.log("netforce " + this.netForce);
+    // }
+
+  let f = this.netForce;
+  
 
     
 }
