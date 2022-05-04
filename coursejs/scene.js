@@ -34,6 +34,7 @@ Scene.init = function() {
   Scene.box    = Scene.buildBox();
   Scene.arrow = Scene.buildArrow();
   Scene.boat = Scene.buildBoat();
+  Scene.keel = Scene.buildKeel();
 
   Scene.update();
 }
@@ -366,6 +367,7 @@ Scene.buildBoat = function() {
     specular: 0x111111,
     shininess: 100,
     side: THREE.DoubleSide,
+    opacity: 0.15, // clipping is an issue, so set a low opacity
   });
 
   let mainHull = new THREE.Mesh(mainHullGeo.geometry, mainHullGeo.material);
@@ -402,7 +404,33 @@ Scene.buildBoat = function() {
 
 }
 
+Scene.buildKeel = function() {
+  let keelGeo = {};
+  keelGeo.meshes = [];
+  keelGeo.length = 120;
+  keelGeo.width = 70;
+  keelGeo.depth = 5;
+  keelGeo.geometry = new THREE.BoxGeometry(keelGeo.width, keelGeo.length, keelGeo.depth);
+  keelGeo.geometry.rotateY(Math.PI/2);
+  keelGeo.material = new THREE.MeshPhongMaterial({
+    color: 0x333333,//0xffffff,
+    specular: 0x111111,
+    shininess: 100,
+    side: THREE.DoubleSide,
+  });
 
+  let keel = new THREE.Mesh(keelGeo.geometry, keelGeo.material);
+  keel.position.x = 0;
+  keel.position.z = 100;
+  keel.position.y = -249 - 60;
+  keel.receiveShadow = true;
+  keel.castShadow = true;
+  keelGeo.meshes.push(keel);
+  Scene.scene.add(keel);
+
+  return keelGeo;
+
+}
 
 Scene.buildArrow = function() {
   let arrow = {};
@@ -441,6 +469,7 @@ Scene.buildBoom = function() {
   boomGeo.meshes = [];
   boomGeo.geometry = new THREE.BoxGeometry(boomGeo.length, 10, 5);
   boomGeo.geometry.translate((240/2),-100,0);
+  boomGeo.geometry.rotateY(-SceneParams.sailAngle/180*Math.PI);
   boomGeo.material = new THREE.MeshPhongMaterial({
     color: 0x333333,//0xffffff,
     specular: 0x888888,//0x111111,
@@ -454,7 +483,6 @@ Scene.buildBoom = function() {
   boom.position.y = -10 + 120;
   // console.log(SceneParams.sailAngle);
   // console.log(SceneParams.sailAngle/180*Math.PI);
-  boom.rotateY(-SceneParams.sailAngle/180*Math.PI);
 
   boom.receiveShadow = true;
   boom.castShadow = true;
@@ -529,6 +557,7 @@ Scene.showWireframe = function(flag) {
   Scene.sphere.material.wireframe = flag;
   Scene.box.material.wireframe = flag;
   Scene.boat[0].material.wireframe = flag;
+  Scene.keel.material.wireframe = flag; 
   // Scene.boat[1].material.wireframe = flag;
 }
 
