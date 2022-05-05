@@ -38,12 +38,12 @@ GuiConfig.defs = [
   /***************************************************
    *                Top level
    ***************************************************/
-  {
-    name: "Cloth Size",
-    param: "fabricLength",
-    range: [200, 1000, 20],
-    onChange: Sim.restartCloth,
-  },
+  // {
+  //   name: "Cloth Size",
+  //   param: "fabricLength",
+  //   range: [200, 1000, 20],
+  //   onChange: Sim.restartCloth,
+  // },
   {
     name: "Wireframe",
     param: "wireframe",

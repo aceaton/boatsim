@@ -68,8 +68,8 @@ class Params {
     // wind comes along the x axis
 
     // BOAT PARAMS
-    this.boatAngle = 60;
-    this.sailAngle = 45;
+    this.boatAngle = 100;
+    this.sailAngle = 30;
 
     // position of the COM relative to the origin (in the direction of boat angle)
     this.boatCOM = new THREE.Vector3(-100,-249+140,0);
@@ -80,7 +80,7 @@ class Params {
 
     // this.accellMult = 
 
-    this.waterDensity = .00001;
+    this.waterDensity = .000005;
 
     this.torqueMult = .000001;//.000000005;
 
@@ -89,8 +89,13 @@ class Params {
     this.slip = .0005;
     // current
 
-    this.torqueOn = true;
+    this.torqueOn = false;
     this.rotInertia = 100;
+    this.bTorqueMult = 1000;
+
+
+    this.follow = false;
+    this.followDist = 1000;
 
     // ====================================================================
 
@@ -106,9 +111,9 @@ class Params {
 
     this.wave = false; // Should wave oscillations be enabled?
     this.waveAmp = 50; // Amplitude of wave oscillations (distance in units)
-    this.waveFreq = 5; // Frequency of wave oscillations (units are complicated, proportional to Hz)
+    this.waveFreq = .1; // Frequency of wave oscillations (units are complicated, proportional to Hz)
 
-    this.wind = false; // Should the wind force be enabled?
+    this.wind = true; // Should the wind force be enabled?
     this.windStrength = 30; // scalar multiplier for wind force magnitude
     this.windDirection = 0; // where the wind is coming from. THREE.Vector3(1,0,0) (directly down from north) is 0 for reference. 
 
@@ -156,8 +161,22 @@ class Params {
     this.showClothTexture = false;
     this.clothTexture = "maze.png";
 
-    this.showGroundTexture = true;
+    this.showGroundTexture = false;
     this.groundTexture = "water.jpg";
+
+    this.fancyGround = false;
+    this.waterSize = 100;
+
+    this.waterWidth = 20000;
+    this.waterHeight = 20000;
+
+    // ===================
+    // Wave
+    // ===================
+    this.waveHeight = 50;
+    this.waveWidth = 10;
+    this.waveOnX = true;
+    this.waveOnZ = true;
 
     // ====================================================================
     //                Video recording properties

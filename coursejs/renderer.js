@@ -122,6 +122,24 @@ Renderer.render = function() {
   }
   Scene.camera.lookAt(Scene.scene.position);
 
+  // if (SceneParams.follow) {
+  //   let pos = boat.position;
+  //   let offpos = new THREE.Vector3().copy(pos).normalize().scalarMultiply;
+  //   // Scene.camera.position.x = boat.
+  // }
+
+  if (SceneParams.fancyGround) {
+    // let u = 0; 
+    // let v = 0;
+    for (let u = 0; u < SceneParams.waterWidth; u++) {
+      for (let v = 0; v < SceneParams.waterWidth; v++) {
+        let vert = Scene.ground.geometry.vertices[v*SceneParams.waterWidth+u];
+        vert = plane1(u/SceneParams.waterWidth,v/SceneParams.waterWidth);
+        // console.log(vert);
+    }
+  }
+    // Scene.ground.geometry.vertices[] = new THREE.ParametricGeometry(initWaterParameterizedPosition, SceneParams.waterSize, SceneParams.waterSize);
+  }
   // Set up raytracer
   // update the picking ray with the camera and mouse position
 	Renderer.raycaster.setFromCamera(Renderer.mouse, Scene.camera);
