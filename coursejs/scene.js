@@ -526,7 +526,7 @@ Scene.buildBoat = function() {
   //keelGeo.geometry.rotateY(Math.PI/2);
   keelGeo.geometry.rotateY(-Math.PI/180*SceneParams.boatAngle);
   let keel = new THREE.Mesh(keelGeo.geometry, matBow);
-  keel.position.x = 55;
+  keel.position.x = -15;
   keel.position.z = 100;
   keel.position.y = -249 - 60;
   keel.receiveShadow = true;
