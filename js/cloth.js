@@ -25,13 +25,32 @@
 // Params:
 // * width: int - the width of the planar section
 // * height: int - the height of the planar section
-function plane(width, height) {
+function plane1(width, height) {
+  console.log("plane1");
   return function(u, v, vec) {
     let x = u * width - width / 2;
-    let y = 125;
     let z = v * height - height / 2;
+    let y = -249;
+    // if (SceneParams.waveOnX && SceneParams.waveOnZ) {
+    //   y += SceneParams.waveHeight*Math.sin(x/SceneParams.waveWidth + z/SceneParams.waveWidth + time/SceneParams.waveFreq);
+    // }
+    if (SceneParams.waveOnX) {
+      y += SceneParams.waveHeight*Math.sin(x/SceneParams.waveWidth +time/SceneParams.wavePdX);
+    }
+    if (SceneParams.waveOnZ) {
+      y += SceneParams.waveHeight*Math.sin(z/SceneParams.waveWidth +time/SceneParams.wavePdZ);
+    }
+    // console.log(time);
+    if (time%3000 === 0) {
+    // // console.log(x/SceneParams.waveWidth);
+    // console.log(time/SceneParams.wavePd);
+    // console.log(x/SceneParams.waveWidth);
+    }
+    
     vec.set(x, y, z);
+    // console.log(vec);
   };
+  
 }
 
 // Our modified cloth - the cloth is a triangle between points p1,p2,p3.
@@ -73,6 +92,10 @@ let initParameterizedPosition = function(u,v,vec) {
   // console.log(pos);
   vec.set(SceneParams.p1x+u*w/d*Math.cos(ang),SceneParams.p1y-v*h/d,SceneParams.p1z+u*w/d*Math.sin(ang));
 }
+
+
+  var initWaterParameterizedPosition = plane1(SceneParams.waterWidth, SceneParams.waterHeight);//plane1(500,500);
+
 
 function liftCoeff(angleDegrees) {
   let d = angleDegrees;
@@ -423,11 +446,20 @@ Cloth.prototype.applyWind = function(windStrength) {
 
   let angNew = (SceneParams.sailAngle/180-.5)*Math.PI;
   let dir = new THREE.Vector3(Math.cos(angNew),0,Math.sin(angNew));
+  if (dir.dot(new THREE.Vector3(1,0,0))<0){
+    dir.multiplyScalar(-1);
+  }
   dir.normalize();
+  // console.log(dir);
   // WILL HAVE TO CHANGE WITH ANGLE PIVOT - TO DO
 
-  let relativeAng = SceneParams.sailAngle + SceneParams.windDirection;
+  let relativeAng = SceneParams.sailAngle - SceneParams.windDirection;
+  if (SceneParams.sailAngle < 0) {
+    relativeAng *= -1;
+  }
+  // console.log(relativeAng);
   let lift = liftCoeff(relativeAng)*SceneParams.windStrength**2/10000*SceneParams.liftC*SceneParams.sailHeight*SceneParams.sailWidth/2;
+  // console.log(lift);
   let liftForce = new THREE.Vector3().copy(dir).multiplyScalar(lift)
   // console.log(liftForce);
 
@@ -500,15 +532,15 @@ Cloth.prototype.applyForces = function() {
   if (SceneParams.wind) {
     this.applyWind(SceneParams.windStrength);
   }
-  if (SceneParams.rain) {
-    this.applyRain(SceneParams.rainStrength, SceneParams.rainRate);
-  }
-  if (SceneParams.wave) {
-    this.applyWave(SceneParams.waveAmp, SceneParams.waveFreq);
-  }
-  if (SceneParams.customForce) {
-    this.applyCustom(SceneParams.customFStrength, SceneParams.customFRate);
-  }
+  // if (SceneParams.rain) {
+  //   this.applyRain(SceneParams.rainStrength, SceneParams.rainRate);
+  // }
+  // if (SceneParams.wave) {
+  //   this.applyWave(SceneParams.waveAmp, SceneParams.waveFreq);
+  // }
+  // if (SceneParams.customForce) {
+  //   this.applyCustom(SceneParams.customFStrength, SceneParams.customFRate);
+  // }
 };
 
 Cloth.prototype.update = function(deltaT,com) {

@@ -26,7 +26,15 @@ Scene.init = function() {
   Scene.lights = Scene.buildLights();
 
   // Now fill the scene with objects
-  Scene.ground = Scene.buildGround();
+  if (SceneParams.fancyGround) {
+    Scene.ground = Scene.buildWater();
+    
+  }
+  else {
+    Scene.ground = Scene.buildGround();
+  }
+  Scene.ground.geometry.dynamic = true;
+
   Scene.cloth  = Scene.buildCloth();
   // Scene.mast  = Scene.buildMast();
   // Scene.boom = Scene.buildBoom();
@@ -58,7 +66,7 @@ Scene.buildStats = function() {
 
 Scene.buildScene = function() {
   let scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0xcce0ff, 500, 10000);
+  scene.fog = new THREE.Fog(0xcce0ff, 500,20000);
 
   return scene;
 }
@@ -117,6 +125,60 @@ Scene.buildLights = function() {
 
   Scene.scene.add(light);
   return light;
+}
+
+Scene.buildWater = function() {
+  let ground = {};
+  ground.textures = {};
+
+  // ground material
+  ground.material = new THREE.MeshPhysicalMaterial({
+    color: 0xaa0000,//1ca3ec,//0x404761, //0x3c3c3c,
+    // specular: 0x404761, //0x3c3c3c//,
+    metalness: 0.3,
+    side: THREE.DoubleSide,
+    alphaTest: 0.5,
+    opacity: .7
+  });
+  
+  // adapted from caio's water material
+//   ground.material = new THREE.MeshPhysicalMaterial({
+//     // clearcoat: 1,
+//     // clearcoatRoughness: 0.1,
+//     // transmission: .4,
+//     // ior: .1,
+//     // reflectivity: .7,
+//     roughness: 0.5,
+//     opacity: .7,
+//     color: 0x0010ff,
+//     side: THREE.DoubleSide,
+//     // envMap: envMap,
+//     // bumpMap: bumpTexture,
+//     transparent: true,
+//     color: 0x1ca3ec
+// });
+
+  // ground mesh
+  ground.geometry = new THREE.ParametricGeometry(initWaterParameterizedPosition, SceneParams.waterSize, SceneParams.waterSize);
+  // console.log(ground.geometry);
+  // ground.m.updateMatrix();
+  ground.mesh = new THREE.Mesh(ground.geometry, ground.material);
+  // ground.mesh.position.y = SceneParams.groundY - 1;
+  // ground.mesh.rotation.x = -Math.PI / 2;
+  ground.mesh.receiveShadow = true;
+
+  // handled in Scene.updateGroundTexture()
+  // needed for ground texture
+  // ground.texture = Scene.loader.load( "textures/terrain/grasslight-big.jpg" );
+  // ground.texture.wrapS = ground.texture.wrapT = THREE.RepeatWrapping;
+  // ground.texture.repeat.set( 25, 25 );
+  // ground.texture.anisotropy = 16;
+  // ground.material.map = ground.texture;
+
+
+  Scene.scene.add(ground.mesh); // add ground to scene
+
+  return ground;
 }
 
 Scene.buildCloth = function() {
@@ -459,7 +521,7 @@ Scene.buildBoat = function() {
   keel.castShadow = true;
   boatGeo.meshes.push(keel);
 
-  let coverGeo1 = new THREE.BoxGeometry(1, mainHullGeo.mainLength + 5, mainHullGeo.centerwidth*2 - 3);
+  let coverGeo1 = new THREE.BoxGeometry(1, mainHullGeo.mainLength, mainHullGeo.centerwidth*2 - 50);
   coverGeo1.rotateY(Math.PI);
   coverGeo1.rotateZ(Math.PI/2);
   coverGeo1.translate((mainHullGeo.mainLength / 2),0,0);
@@ -765,7 +827,7 @@ Scene.updateClothTexture = function(imgName) {
 Scene.updateGroundTexture = function(imgName) {
   Scene.ground.material.needsUpdate = true;
   // Hide texture if we are disabling it
-  if (!SceneParams.showGroundTexture) {
+  if (!SceneParams.showGroundTexture || SceneParams.fancyGround) {
     Scene.ground.material.map = undefined;
     return;
   }
