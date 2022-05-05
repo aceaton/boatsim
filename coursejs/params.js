@@ -46,7 +46,7 @@ class Params {
     // fancy buoyancy
     this.fancyBuoyancy = true;
 
-    this.waveTorque = 5000000;
+    this.waveTorque = 900000;
 
     this.restDistance = this.sailHeight/this.d;
     this.restDistanceB = 2; // natural distance multiplier of 2-apart springs
@@ -58,6 +58,15 @@ class Params {
     this.restDistanceS = Math.sqrt(this.restDistanceV**2 + this.restDistanceH**2); // natural distance multiplier of diagonal springs
 
     this.springStrength = 10;
+
+    this.arrowKeys = ["wind","gravity","buoyancy","lift","total force","total torque"];
+  this.windCol = 0xFF0000;
+    this.gravCol = 0x00FF00;
+    this.buoyCol = 0x0000ff;
+    this.liftCol = 0xffff00;
+    this.forceCol = 0xff00ff;
+    this.torCol = 0x00ffff;
+
     // ========================================
 
     this.xSegs = Math.round(this.fabricLength / this.restDistance); // how many particles wide is the cloth
@@ -69,6 +78,8 @@ class Params {
     this.bendingSprings = true;
     this.showConstraints = false; // should constraints be drawn to screen?
     this.allowShownConstraintMovement = false; // should drawn constraints be locked in place?
+
+    this.showArrows = false;
 
     // wind comes along the x axis
 
@@ -85,9 +96,9 @@ class Params {
 
     // this.accellMult = 
 
-    this.waterDensity = .000000005;
+    this.waterDensity = .0000005;
 
-    this.torqueMult = .000001;//.000000005;
+    this.torqueMult = .0000002;//.000000005;
 
     this.accelMult = 12;//5000;
 

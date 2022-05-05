@@ -1,5 +1,4 @@
-var arrowKeys = ["wind","gravity","buoyancy","lift","total force","total torque"];
-var arrowColors = [0xFF0000,0x00FF00,0x0000ff,0xffff00,0xff00ff,0x00ffff];
+ let arrowColors = [SceneParams.windCol,SceneParams.gravCol,SceneParams.buoyCol,SceneParams.liftCol,SceneParams.forceCol,SceneParams.torCol];
 function Boat(cloth) {
   this.mass = SceneParams.boatMass;
 
@@ -40,12 +39,15 @@ function Boat(cloth) {
   let dir = new THREE.Vector3(1,0,0);
   this.arrows = [];
   let windDir = new THREE.Vector3(1,0,0).applyAxisAngle(new THREE.Vector3(0,1,0),SceneParams.windDirection);
-  console.log(windDir,SceneParams.windStrength);
+  // console.log(windDir,SceneParams.windStrength);
+  // console.log(SceneParams.arrowColors);
   this.arrows.push(new THREE.ArrowHelper(windDir,arrowOrigin,SceneParams.windStrength*5,arrowColors[0]));
   Scene.scene.add(this.arrows[0]);
-  for (let i = 1; i < arrowKeys.length; i++) {
+  for (let i = 1; i < SceneParams.arrowKeys.length; i++) {
     this.arrows.push(new THREE.ArrowHelper(dir,arrowOrigin,0,arrowColors[i]));
-    Scene.scene.add(this.arrows[i]);
+    if (SceneParams.showArrows) {
+      Scene.scene.add(this.arrows[i]);
+    }
   }
 }
 
@@ -131,6 +133,8 @@ Boat.prototype.applyForcesAndUpdate = function () {
   // console.log("torguwq ", this.torque);
   //   console.log(this.netForce);
 
+  this.updateArrow(3,new THREE.Vector3().copy(upd[0]).multiplyScalar(1/10));
+
   // apply buoyancy forces along hull length
   if (SceneParams.fancyGround && SceneParams.fancyBuoyancy) {
     this.applyAdvancedBuoyancy();
@@ -170,6 +174,7 @@ Boat.prototype.applyForcesAndUpdate = function () {
 
   // apply verlet integration but with angular momentum
   if (SceneParams.torqueOn) {
+    this.updateArrow(5,new THREE.Vector3().copy(this.torque).multiplyScalar(1/2000));
     var t = new THREE.Vector3().copy(this.angVel);
     t.multiplyScalar(1 - DAMPING);
     t.add(this.torque.multiplyScalar(SceneParams.torqueMult * deltaT * deltaT / SceneParams.rotInertia));
@@ -212,6 +217,7 @@ Boat.prototype.applyBuoyancy = function () {
   let bForce = new THREE.Vector3(0, SceneParams.waterDensity * v * GRAVITY, 0);
 
   this.netForce.add(bForce);
+  this.updateArrow(2,bForce);
 
   // console.log(bForce.length());
 
@@ -254,6 +260,9 @@ Boat.prototype.applyAdvancedBuoyancy = function () {
   let v1 = segArea * l;
 
   let bForce = new THREE.Vector3(0, SceneParams.waterDensity * v1 * GRAVITY, 0);
+  bForce.multiplyScalar(1);
+
+  this.updateArrow(2,bForce);
 
   bForce.multiplyScalar(1);
   this.netForce.add(bForce);
@@ -293,10 +302,12 @@ Boat.prototype.applyGravity = function () {
 
   let forc = new THREE.Vector3(0, -1 * GRAVITY * this.mass, 0);
 
+  
   if (SceneParams.fancyGround && SceneParams.fancyBuoyancy) {
     forc.multiplyScalar(.2);
     this.netForce.add(forc);
   }
+  this.updateArrow(1,forc.multiplyScalar(1/20));
 };
 
 Boat.prototype.applyKeelForce = function () {

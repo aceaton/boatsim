@@ -418,6 +418,49 @@ GuiConfig.defs = [
     param: "textureHull",
     onChange: Scene.update,
   },
+  {
+    folderName: "Appearance",
+    name: "Wind",
+    param: "windCol",
+    type: "color",
+    onChange: Scene.update,
+  },
+  {
+    folderName: "Appearance",
+    name: "Gravity",
+    param: "gravCol",
+    type: "color",
+    onChange: Scene.update,
+  },
+  {
+    folderName: "Appearance",
+    name: "Buoyancy",
+    param: "buoyCol",
+    type: "color",
+    onChange: Scene.update,
+  },
+  {
+    folderName: "Appearance",
+    name: "Lift",
+    param: "liftCol",
+    type: "color",
+    onChange: Scene.update,
+  },
+  {
+    folderName: "Appearance",
+    name: "total force",
+    param: "forceCol",
+    type: "color",
+    onChange: Scene.update,
+  },
+  {
+    folderName: "Appearance",
+    name: "Total torque",
+    param: "torCol",
+    type: "color",
+    onChange: Scene.update,
+  },
+
   
    /***************************************************
     *             Top level
@@ -427,9 +470,21 @@ GuiConfig.defs = [
   //    param: "restartCloth",
   //    onClick: Sim.init,
   //  },
+
+
+  // {
+  //   name: "ArrowColors",
+  //   param: "arrowColors",
+  //   onClick: Params.restoreDefaults,
+  // },
    {
      name: "Restore defaults",
      param: "restoreDefaults",
      onClick: Params.restoreDefaults,
-   }
+   },
+
+   {
+    name: "Show force arrows",
+    param: "showArrows",
+  }
  ];
