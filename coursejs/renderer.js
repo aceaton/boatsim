@@ -131,14 +131,20 @@ Renderer.render = function() {
   if (SceneParams.fancyGround) {
     // let u = 0; 
     // let v = 0;
-    for (let u = 0; u < SceneParams.waterWidth; u++) {
-      for (let v = 0; v < SceneParams.waterWidth; v++) {
-        let vert = Scene.ground.geometry.vertices[v*SceneParams.waterWidth+u];
-        vert = plane1(u/SceneParams.waterWidth,v/SceneParams.waterWidth);
-        // console.log(vert);
-    }
-  }
-    // Scene.ground.geometry.vertices[] = new THREE.ParametricGeometry(initWaterParameterizedPosition, SceneParams.waterSize, SceneParams.waterSize);
+  //   for (let u = 0; u < SceneParams.waterWidth; u++) {
+  //     for (let v = 0; v < SceneParams.waterWidth; v++) {
+  //       let vert = Scene.ground.geometry.vertices[v*SceneParams.waterWidth+u];
+  //       vert = plane1(u/SceneParams.waterWidth,v/SceneParams.waterWidth);
+  //       // console.log(vert);
+  //   }
+  // }
+    Scene.ground.geometry = new THREE.ParametricGeometry(initWaterParameterizedPosition, SceneParams.waterSize, SceneParams.waterSize);
+    console.log(Scene.ground.geometry.vertices[0]);
+    Scene.ground.geometry.verticesNeedUpdate = true;
+    Scene.ground.geometry.needsUpdate = true;
+    Scene.ground.geometry.computeBoundingBox();
+    Scene.ground.geometry.computeBoundingSphere();
+    // Scene.ground.geometry.attributes.position.needsUpdate = true;
   }
   // Set up raytracer
   // update the picking ray with the camera and mouse position

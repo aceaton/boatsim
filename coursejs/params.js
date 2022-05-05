@@ -152,7 +152,7 @@ class Params {
     this.clothColor = 0xaaaaaa;//0xaa2929;     // base color of cloth
     this.clothSpecular = 0x030303;  // reflection color of cloth
 
-    this.groundColor = 0x404761;    // base color of ground
+    this.groundColor = 0x2F9FBF;//0x404761;    // base color of ground
     // this.groundSpecular = 0x404761; // reflection color of ground
     this.groundEmissive = 0x000000; // emission color of ground
 
@@ -161,7 +161,7 @@ class Params {
     this.showClothTexture = false;
     this.clothTexture = "maze.png";
 
-    this.showGroundTexture = false;
+    this.showGroundTexture = true;
     this.groundTexture = "water.jpg";
 
     this.fancyGround = false;

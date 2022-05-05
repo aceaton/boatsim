@@ -33,6 +33,8 @@ Scene.init = function() {
   else {
     Scene.ground = Scene.buildGround();
   }
+  Scene.ground.geometry.dynamic = true;
+
   Scene.cloth  = Scene.buildCloth();
   // Scene.mast  = Scene.buildMast();
   // Scene.boom = Scene.buildBoom();
@@ -158,6 +160,7 @@ Scene.buildWater = function() {
   // ground mesh
   ground.geometry = new THREE.ParametricGeometry(initWaterParameterizedPosition, SceneParams.waterSize, SceneParams.waterSize);
   // console.log(ground.geometry);
+  ground.m.updateMatrix();
   ground.mesh = new THREE.Mesh(ground.geometry, ground.material);
   // ground.mesh.position.y = SceneParams.groundY - 1;
   // ground.mesh.rotation.x = -Math.PI / 2;
@@ -170,6 +173,7 @@ Scene.buildWater = function() {
   // ground.texture.repeat.set( 25, 25 );
   // ground.texture.anisotropy = 16;
   // ground.material.map = ground.texture;
+
 
   Scene.scene.add(ground.mesh); // add ground to scene
 
@@ -758,7 +762,7 @@ Scene.updateClothTexture = function(imgName) {
 Scene.updateGroundTexture = function(imgName) {
   Scene.ground.material.needsUpdate = true;
   // Hide texture if we are disabling it
-  if (!SceneParams.showGroundTexture) {
+  if (!SceneParams.showGroundTexture || SceneParams.fancyGround) {
     Scene.ground.material.map = undefined;
     return;
   }

@@ -31,20 +31,21 @@ function plane1(width, height) {
     let x = u * width - width / 2;
     let z = v * height - height / 2;
     let y = -249;
-    if (SceneParams.waveOnX && SceneParams.waveOnZ) {
-      y += SceneParams.waveHeight*Math.sin(x/SceneParams.waveWidth + z/SceneParams.waveWidth + time/SceneParams.waveFreq);
-    }
+    // if (SceneParams.waveOnX && SceneParams.waveOnZ) {
+    //   y += SceneParams.waveHeight*Math.sin(x/SceneParams.waveWidth + z/SceneParams.waveWidth + time/SceneParams.waveFreq);
+    // }
     if (SceneParams.waveOnX) {
       y += SceneParams.waveHeight*Math.sin(x/SceneParams.waveWidth +time/SceneParams.waveFreq);
-    }
-    // console.log(time);
-    if (time%3000 === 0) {
-    // console.log(x/SceneParams.waveWidth);
-    // console.log(time/SceneParams.waveFreq);
     }
     if (SceneParams.waveOnZ) {
       y += SceneParams.waveHeight*Math.sin(z/SceneParams.waveWidth +time/SceneParams.waveFreq);
     }
+    // console.log(time);
+    if (time%3000 === 0) {
+    // console.log(x/SceneParams.waveWidth);
+    // console.log(time/SceneParams.waveFreq + x/SceneParams.waveWidth);
+    }
+    
     vec.set(x, y, z);
     // console.log(vec);
   };

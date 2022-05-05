@@ -44,33 +44,33 @@ GuiConfig.defs = [
   //   range: [200, 1000, 20],
   //   onChange: Sim.restartCloth,
   // },
-  {
-    name: "Wireframe",
-    param: "wireframe",
-    onChange: Scene.showWireframe,
-  },
-  {
-    name: "auto rotate",
-    param: "rotate",
-  },
-  {
-    name: "angle",
-    param: "sailAngle",
-    range: [-90,90,5],
-    onChange: Sim.restartCloth,
-  },
+  // {
+  //   name: "Wireframe",
+  //   param: "wireframe",
+  //   onChange: Scene.showWireframe,
+  // },
+  // {
+  //   name: "auto rotate",
+  //   param: "rotate",
+  // },
+  // {
+  //   name: "angle",
+  //   param: "sailAngle",
+  //   range: [-90,90,5],
+  //   onChange: Sim.restartCloth,
+  // },
   /***************************************************
-   *             Forces folder
+   *             Boat folder
    ***************************************************/
   {
-   folderName: "Forces",
-   name: "integrate",
-   param: "integrate",
+   folderName: "Boat",
+   name: "Boat angle",
+   param: "boatAngle",
   },
   {
-   folderName: "Forces",
-   name: "gravity",
-   param: "gravity",
+   folderName: "Boat",
+   name: "Sail angle",
+   param: "sailAngle",
   },
   {
     folderName: "Forces",
