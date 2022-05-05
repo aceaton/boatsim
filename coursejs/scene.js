@@ -509,16 +509,31 @@ Scene.buildBoat = function() {
   keelGeo.width = 70;
   keelGeo.depth = 5;
   keelGeo.geometry = new THREE.BoxGeometry(keelGeo.width, keelGeo.length, keelGeo.depth);
-  keelGeo.geometry.rotateY(Math.PI/2);
-
+  //keelGeo.geometry.rotateY(Math.PI/2);
+  keelGeo.geometry.rotateY(-Math.PI/180*SceneParams.boatAngle);
   let keel = new THREE.Mesh(keelGeo.geometry);
-  keel.position.x = 0;
+  keel.position.x = 55;
   keel.position.z = 100;
   keel.position.y = -249 - 60;
   keel.receiveShadow = true;
   keel.castShadow = true;
   boatGeo.meshes.push(keel);
 
+  let coverGeo1 = new THREE.BoxGeometry(1, mainHullGeo.mainLength + 5, mainHullGeo.centerwidth*2 - 3);
+  coverGeo1.rotateY(Math.PI);
+  coverGeo1.rotateZ(Math.PI/2);
+  coverGeo1.translate((mainHullGeo.mainLength / 2),0,0);
+  coverGeo1.rotateY(-Math.PI/180*SceneParams.boatAngle);
+  // coverGeo1.rotateZ(Math.PI);
+  let cover1 = new THREE.Mesh(coverGeo1, mat);
+  cover1.position.x = 0;
+  cover1.position.z = 0;
+  cover1.position.y = -249 + 140;
+  cover1.receiveShadow = true;
+  cover1.castShadow = true;
+  boatGeo.meshes.push(cover1);
+  
+  
 
   var singleGeo = new THREE.Geometry();
   for (var m of boatGeo.meshes){
@@ -530,6 +545,35 @@ Scene.buildBoat = function() {
   singleMesh.castShadow = true;
   Scene.scene.add(singleMesh);
 
+
+ //var coverGeo2 = new THREE.Geometry();
+ // var v1 = new THREE.Vector3(0,-249 + 125,0);
+ // var v2 = new THREE.Vector3(0,-249 + 125, mainHullGeo.centerwidth*2);
+ // var v3 = new THREE.Vector3(125,-249 + 125,mainHullGeo.centerwidth);
+
+
+//coverGeo2.vertices.push(new THREE.Vector3(v1));
+//coverGeo2.vertices.push(new THREE.Vector3(v2));
+//coverGeo2.vertices.push(new THREE.Vector3(v3));
+//console.log("below are vertices");
+//console.log(coverGeo2.vertices);
+//coverGeo2.faces.push( new THREE.Face3( 0, 1, 2 ) );
+
+//coverGeo2.computeFaceNormals();
+//coverGeo2.computeVertexNormals();
+//coverGeo2.translate(0,100,0);
+
+//var cover2 = new THREE.Mesh(coverGeo2, mainHullGeo.material);
+//cover2.receiveShadow = true;
+//cover2.castShadow = true;
+//mainHullGeo.meshes.push(cover2);
+//mainHull.add(cover2);
+//Scene.scene.add(cover2);
+
+
+
+
+  
   return singleMesh;
 
 }
@@ -577,6 +621,7 @@ Scene.buildArrow = function(ang) {
   });
   
   let ar = new THREE.Mesh(arrow.geometry, arrow.material);
+  ar.rotation.set(0, SceneParams.windDirection*(Math.PI/180), 0);
   ar.position.x = -100;
   ar.position.z = 0;
   ar.position.y = -10;
