@@ -32,6 +32,7 @@ Scene.init = function() {
   }
   else {
     Scene.ground = Scene.buildGround();
+    
   }
   Scene.ground.geometry.dynamic = true;
 
@@ -43,6 +44,7 @@ Scene.init = function() {
   Scene.arrow = Scene.buildArrow(0);
   Scene.arrow = Scene.buildArrow(SceneParams.windDirection);
   Scene.boat = Scene.buildBoat();
+  
   // Scene.keel = Scene.buildKeel();
 
   Scene.update();
@@ -253,10 +255,11 @@ Scene.buildCloth = function() {
   // this part allows us to use an image for the cloth texture
   // can include transparent parts
   // cloth.texture = Scene.loader.load( "textures/patterns/circuit_pattern.png" );
-  cloth.texture = Scene.loader.load("textures/patterns/" + SceneParams.clothTexture);
-  cloth.texture.wrapS = cloth.texture.wrapT = THREE.RepeatWrapping;
-  cloth.texture.anisotropy = 16;
-  cloth.material.map = cloth.texture;
+  //cloth.texture = Scene.loader.load("textures/patterns/420club.png");
+  //console.log(cloth.texture);
+  //cloth.texture.wrapS = cloth.texture.wrapT = THREE.RepeatWrapping;
+  //cloth.texture.anisotropy = 16;
+  //cloth.material.map = cloth.texture;
   
   // more stuff needed for the texture
   var uniforms = { texture:  { type: "t", value: cloth.texture } };
@@ -430,15 +433,19 @@ Scene.buildBoat = function() {
   mainHullGeo.geometry.rotateY(-Math.PI/180*SceneParams.boatAngle);
   
   // mainHullGeo.material = ;
-  let mat = new THREE.MeshPhongMaterial({
-    color: 0x333333,//0xffffff,
+  let matHull = new THREE.MeshPhongMaterial({
+    //color: 0x333333,//0xffffff,
     specular: 0x111111,
     shininess: 100,
     side: THREE.DoubleSide,
-    opacity: 0.15, // clipping is an issue, so set a low opacity
+    opacity: 1, 
   });
 
-  let mainHull = new THREE.Mesh(mainHullGeo.geometry);
+  //Scene.ground.material.map = texture;
+  var texture = Scene.loader.load("textures/patterns/lp.png");
+  matHull.map = texture;
+
+  let mainHull = new THREE.Mesh(mainHullGeo.geometry, matHull);
   mainHull.position.x = 0;
   mainHull.position.z = 0;
   mainHull.position.y = -249 + 140;
@@ -457,8 +464,15 @@ Scene.buildBoat = function() {
   bowGeo.translate(-(125 / 2),0,0);
   bowGeo.rotateY(-Math.PI/180*SceneParams.boatAngle);
   
+  let matBow = new THREE.MeshPhongMaterial({
+    //color: 0x333333,//0xffffff,
+    specular: 0x111111,
+    shininess: 100,
+    side: THREE.DoubleSide,
+    opacity: 1, 
+  });
   
-  let bow = new THREE.Mesh(bowGeo);
+  let bow = new THREE.Mesh(bowGeo, matBow);
   bow.position.x = 0;
   bow.position.z = 0;
   bow.position.y = -249 + 140;
@@ -476,7 +490,7 @@ Scene.buildBoat = function() {
   mastGeo.geometry.translate(0,630/2,0);
 
 
-  let mast = new THREE.Mesh(mastGeo.geometry);
+  let mast = new THREE.Mesh(mastGeo.geometry, matBow);
   mast.position.x = 0;
   mast.position.z = 0;
   mast.position.y = -249 + 120;
@@ -492,7 +506,7 @@ Scene.buildBoat = function() {
   boomGeo.geometry.translate((240/2),-100,0);
   boomGeo.geometry.rotateY(-SceneParams.sailAngle/180*Math.PI);
   
-  let boom = new THREE.Mesh(boomGeo.geometry);
+  let boom = new THREE.Mesh(boomGeo.geometry, matBow);
   boom.position.x = 0;
   boom.position.z = 0;
   boom.position.y = -10 + 120;
@@ -511,13 +525,24 @@ Scene.buildBoat = function() {
   keelGeo.geometry = new THREE.BoxGeometry(keelGeo.width, keelGeo.length, keelGeo.depth);
   //keelGeo.geometry.rotateY(Math.PI/2);
   keelGeo.geometry.rotateY(-Math.PI/180*SceneParams.boatAngle);
-  let keel = new THREE.Mesh(keelGeo.geometry);
-  keel.position.x = 55;
+  let keel = new THREE.Mesh(keelGeo.geometry, matBow);
+  keel.position.x = -15;
   keel.position.z = 100;
   keel.position.y = -249 - 60;
   keel.receiveShadow = true;
   keel.castShadow = true;
   boatGeo.meshes.push(keel);
+
+  let matCover = new THREE.MeshPhongMaterial({
+    //color: 0x333333,//0xffffff,
+    specular: 0x111111,
+    shininess: 100,
+    side: THREE.DoubleSide,
+    opacity: 1, // clipping is an issue, so set a low opacity
+  });
+
+  var texture2 = Scene.loader.load("textures/patterns/420neww.jpeg");
+  matCover.map = texture2;
 
   let coverGeo1 = new THREE.BoxGeometry(1, mainHullGeo.mainLength, mainHullGeo.centerwidth*2 - 50);
   coverGeo1.rotateY(Math.PI);
@@ -525,7 +550,7 @@ Scene.buildBoat = function() {
   coverGeo1.translate((mainHullGeo.mainLength / 2),0,0);
   coverGeo1.rotateY(-Math.PI/180*SceneParams.boatAngle);
   // coverGeo1.rotateZ(Math.PI);
-  let cover1 = new THREE.Mesh(coverGeo1, mat);
+  let cover1 = new THREE.Mesh(coverGeo1, matCover);
   cover1.position.x = 0;
   cover1.position.z = 0;
   cover1.position.y = -249 + 140;
@@ -540,7 +565,7 @@ Scene.buildBoat = function() {
     m.updateMatrix();
     singleGeo.merge(m.geometry,m.matrix);
   }
-  var singleMesh = new THREE.Mesh(singleGeo, mat);
+  var singleMesh = new THREE.Mesh(singleGeo, matCover);
   singleMesh.receiveShadow = true;
   singleMesh.castShadow = true;
   Scene.scene.add(singleMesh);
@@ -761,6 +786,7 @@ Scene.buildClothTexture = function(imgName) {
   } );
 
   return [texture, customDepthMaterial];
+  
 }
 
 Scene.buildGroundTexture = function(imgName) {
@@ -798,11 +824,26 @@ Scene.updateClothTexture = function(imgName) {
   [texture, depthMaterial] = Scene.buildClothTexture(imgName);
   // Tough to check if this async load went through OK - just assume so for now
   // and let the user troubleshoot
-
   Scene.cloth.material.map = texture;
   Scene.cloth.mesh.customDepthMaterial = depthMaterial;
   Scene.cloth.textures[imgName] = [texture, depthMaterial];
+  
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Scene.updateGroundTexture = function(imgName) {
   Scene.ground.material.needsUpdate = true;
@@ -814,6 +855,8 @@ Scene.updateGroundTexture = function(imgName) {
 
   // If we already constructed this material, re-use it
   let texture = Scene.ground.textures[imgName];
+  console.log("line 776")
+  console.log(texture);
   if (texture) {
     Scene.ground.material.map = texture;
     return;
@@ -821,6 +864,8 @@ Scene.updateGroundTexture = function(imgName) {
 
   // Otherwise construct a new one
   texture = Scene.buildGroundTexture(imgName);
+  console.log("below is ground texture");
+  console.log(texture);
   // Tough to check if this async load went through OK - just assume so for now
   // and let the user troubleshoot
 
