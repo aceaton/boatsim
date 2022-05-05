@@ -153,8 +153,8 @@ class Params {
 
     this.fogColor = 0xcce0ff;       // base color of fog
 
-    this.showClothTexture = false;
-    this.clothTexture = "maze.png";
+    this.showClothTexture = true;
+    this.clothTexture = "club420.png";
 
     this.showGroundTexture = true;
     this.groundTexture = "water.jpg";

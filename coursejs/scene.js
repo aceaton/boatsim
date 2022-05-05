@@ -35,6 +35,7 @@ Scene.init = function() {
   Scene.arrow = Scene.buildArrow(0);
   Scene.arrow = Scene.buildArrow(SceneParams.windDirection);
   Scene.boat = Scene.buildBoat();
+  
   // Scene.keel = Scene.buildKeel();
 
   Scene.update();
@@ -191,10 +192,11 @@ Scene.buildCloth = function() {
   // this part allows us to use an image for the cloth texture
   // can include transparent parts
   // cloth.texture = Scene.loader.load( "textures/patterns/circuit_pattern.png" );
-  cloth.texture = Scene.loader.load("textures/patterns/" + SceneParams.clothTexture);
-  cloth.texture.wrapS = cloth.texture.wrapT = THREE.RepeatWrapping;
-  cloth.texture.anisotropy = 16;
-  cloth.material.map = cloth.texture;
+  //cloth.texture = Scene.loader.load("textures/patterns/420club.png");
+  //console.log(cloth.texture);
+  //cloth.texture.wrapS = cloth.texture.wrapT = THREE.RepeatWrapping;
+  //cloth.texture.anisotropy = 16;
+  //cloth.material.map = cloth.texture;
   
   // more stuff needed for the texture
   var uniforms = { texture:  { type: "t", value: cloth.texture } };
@@ -376,7 +378,7 @@ Scene.buildBoat = function() {
     opacity: 0.15, // clipping is an issue, so set a low opacity
   });
 
-  let mainHull = new THREE.Mesh(mainHullGeo.geometry);
+  let mainHull = new THREE.Mesh(mainHullGeo.geometry, mat);
   mainHull.position.x = 0;
   mainHull.position.z = 0;
   mainHull.position.y = -249 + 140;
@@ -396,7 +398,7 @@ Scene.buildBoat = function() {
   bowGeo.rotateY(-Math.PI/180*SceneParams.boatAngle);
   
   
-  let bow = new THREE.Mesh(bowGeo);
+  let bow = new THREE.Mesh(bowGeo, mat);
   bow.position.x = 0;
   bow.position.z = 0;
   bow.position.y = -249 + 140;
@@ -414,7 +416,7 @@ Scene.buildBoat = function() {
   mastGeo.geometry.translate(0,630/2,0);
 
 
-  let mast = new THREE.Mesh(mastGeo.geometry);
+  let mast = new THREE.Mesh(mastGeo.geometry, mat);
   mast.position.x = 0;
   mast.position.z = 0;
   mast.position.y = -249 + 120;
@@ -699,6 +701,7 @@ Scene.buildClothTexture = function(imgName) {
   } );
 
   return [texture, customDepthMaterial];
+  
 }
 
 Scene.buildGroundTexture = function(imgName) {
@@ -736,11 +739,28 @@ Scene.updateClothTexture = function(imgName) {
   [texture, depthMaterial] = Scene.buildClothTexture(imgName);
   // Tough to check if this async load went through OK - just assume so for now
   // and let the user troubleshoot
-
+  console.log(texture);
+  console.log(depthMaterial);
   Scene.cloth.material.map = texture;
   Scene.cloth.mesh.customDepthMaterial = depthMaterial;
   Scene.cloth.textures[imgName] = [texture, depthMaterial];
+  
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Scene.updateGroundTexture = function(imgName) {
   Scene.ground.material.needsUpdate = true;
@@ -752,6 +772,8 @@ Scene.updateGroundTexture = function(imgName) {
 
   // If we already constructed this material, re-use it
   let texture = Scene.ground.textures[imgName];
+  console.log("line 776")
+  console.log(texture);
   if (texture) {
     Scene.ground.material.map = texture;
     return;
@@ -759,6 +781,8 @@ Scene.updateGroundTexture = function(imgName) {
 
   // Otherwise construct a new one
   texture = Scene.buildGroundTexture(imgName);
+  console.log("below is ground texture");
+  console.log(texture);
   // Tough to check if this async load went through OK - just assume so for now
   // and let the user troubleshoot
 
