@@ -1,3 +1,5 @@
+var arrowKeys = ["wind","gravity","buoyancy","lift","total force","total torque"];
+var arrowColors = [0xFF0000,0x00FF00,0x0000ff,0xffff00,0xff00ff,0x00ffff];
 function Boat(cloth) {
   this.mass = SceneParams.boatMass;
 
@@ -33,6 +35,29 @@ function Boat(cloth) {
   
   this.waterEq = plane1(this.w,this.h,false);
   this.waterDer = plane1(this.w,this.h,true);
+
+  arrowOrigin = new THREE.Vector3(-400,100,0);
+  let dir = new THREE.Vector3(1,0,0);
+  this.arrows = [];
+  let windDir = new THREE.Vector3(1,0,0).applyAxisAngle(new THREE.Vector3(0,1,0),SceneParams.windDirection);
+  console.log(windDir,SceneParams.windStrength);
+  this.arrows.push(new THREE.ArrowHelper(windDir,arrowOrigin,SceneParams.windStrength*5,arrowColors[0]));
+  Scene.scene.add(this.arrows[0]);
+  for (let i = 1; i < arrowKeys.length; i++) {
+    this.arrows.push(new THREE.ArrowHelper(dir,arrowOrigin,0,arrowColors[i]));
+    Scene.scene.add(this.arrows[i]);
+  }
+}
+
+Boat.prototype.updateArrow = function(arrowind,vec) {
+  let dir = new THREE.Vector3().copy(vec);
+  let len = dir.length();
+  dir.normalize();
+  this.arrows[arrowind].setLength(len);
+  this.arrows[arrowind].setDirection(dir);
+  let windDir = new THREE.Vector3(1,0,0).applyAxisAngle(new THREE.Vector3(0,1,0),-1*SceneParams.windDirection/180*Math.PI);
+  this.arrows[0].setLength(SceneParams.windStrength*2);
+  this.arrows[0].setDirection(windDir);
 }
 
 Boat.prototype.translate = function (tr) {
@@ -120,6 +145,7 @@ Boat.prototype.applyForcesAndUpdate = function () {
 
   this.applyKeelForce();
 
+  this.updateArrow(4,this.netForce);
   // console.log(this.netForce);
   // console.log(this.netForce.multiplyScalar(deltaT*deltaT/this.mass));
   // this.netForce.multiplyScalar(deltaT*deltaT/this.mass);
@@ -129,6 +155,7 @@ Boat.prototype.applyForcesAndUpdate = function () {
   const DAMPING = SceneParams.DAMPING;
   var p = new THREE.Vector3(0, 0, 0).subVectors(this.position, this.previous);
   // console.log(p);
+
   this.previous = this.position;
   p.multiplyScalar(1 - DAMPING);
   p.add(this.position);

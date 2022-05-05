@@ -41,11 +41,12 @@ Scene.init = function() {
   // Scene.boom = Scene.buildBoom();
   Scene.sphere = Scene.buildSphere();
   Scene.box    = Scene.buildBox();
-  Scene.arrow = Scene.buildArrow(0);
-  Scene.arrow = Scene.buildArrow(SceneParams.windDirection);
+  // Scene.arrow = Scene.buildArrow(0);
+  // Scene.arrow = Scene.buildArrow(SceneParams.windDirection);
   Scene.boat = Scene.buildBoat();
   
   // Scene.keel = Scene.buildKeel();
+  
 
   Scene.update();
 }
@@ -541,8 +542,11 @@ Scene.buildBoat = function() {
     opacity: 1, // clipping is an issue, so set a low opacity
   });
 
+  if (SceneParams.textureHull) {
   var texture2 = Scene.loader.load("textures/patterns/420neww.jpeg");
+  
   matCover.map = texture2;
+  }
 
   let coverGeo1 = new THREE.BoxGeometry(1, mainHullGeo.mainLength, mainHullGeo.centerwidth*2 - 50);
   coverGeo1.rotateY(Math.PI);

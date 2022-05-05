@@ -412,6 +412,13 @@ GuiConfig.defs = [
      param: "groundTexture",
      onChange: Scene.update,
    },
+   {
+    folderName: "Appearance",
+    name: "hull texture?",
+    param: "textureHull",
+    onChange: Scene.update,
+  },
+  
    /***************************************************
     *             Top level
     ***************************************************/

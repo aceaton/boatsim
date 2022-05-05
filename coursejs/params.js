@@ -85,7 +85,7 @@ class Params {
 
     // this.accellMult = 
 
-    this.waterDensity = .000005;
+    this.waterDensity = .000000005;
 
     this.torqueMult = .000001;//.000000005;
 
@@ -175,6 +175,8 @@ class Params {
 
     this.waterWidth = 20000;
     this.waterHeight = 20000;
+
+    this.textureHull = true;
 
     // ===================
     // Wave
