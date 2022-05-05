@@ -26,6 +26,13 @@ function Boat(cloth) {
 
   this.netForce = new THREE.Vector3(0, 0, 0);
   this.torque = new THREE.Vector3(0, 0, 0);
+
+  // water surface equations for advanced buoyancy
+  this.w = SceneParams.waterWidth;
+  this.h = SceneParams.waterHeight;
+  
+  this.waterEq = plane1(this.w,this.h,false);
+  this.waterDer = plane1(this.w,this.h,true);
 }
 
 Boat.prototype.translate = function (tr) {
@@ -100,8 +107,12 @@ Boat.prototype.applyForcesAndUpdate = function () {
   //   console.log(this.netForce);
 
   // apply buoyancy forces along hull length
-  this.applyBuoyancy();
-
+  if (SceneParams.fancyGround && SceneParams.fancyBuoyancy) {
+    this.applyAdvancedBuoyancy();
+  }
+  else {
+    this.applyBuoyancy();
+  }
   // apply gravity force
   if (SceneParams.gravity) {
     this.applyGravity();
@@ -186,15 +197,79 @@ Boat.prototype.applyBuoyancy = function () {
 }
 
 Boat.prototype.applyAdvancedBuoyancy = function () {
+  let u = (this.position.x + this.w/2)/this.w;
+  let v = (this.position.z + this.h/2)/this.h;
 
+  let waterHeight = new THREE.Vector3(0,0,0);
+  let waterSlope = new THREE.Vector3(0,0,0);
+
+  this.waterEq(u,v,waterHeight);
+  this.waterDer(u,v,waterSlope);
+
+  // console.log(waterSlope);
+  // console.log(waterHeight.y);
+  // console.log(this.position.y);
+
+  const GRAVITY = SceneParams.GRAVITY * 50;
+  let r = 140;
+  let l = 295;
+  let depth = waterHeight.y - this.position.y + r;
+
+  // distance of COM below the center of the cylinder
+  yDisp = SceneParams.boatCOMy + 109;
+  // console.log(depth);
+  // console.log(this.position);
+  if (depth <= 0) return;
+
+  // how much water is displaced using cylinder volume
+  let theta = 2 * Math.acos(1 - depth / r);
+  let segArea = .5 * r ** 2 * theta - .5 * Math.sin(theta) * r ** 2;
+  let v1 = segArea * l;
+
+  let bForce = new THREE.Vector3(0, SceneParams.waterDensity * v1 * GRAVITY, 0);
+
+  bForce.multiplyScalar(1);
+  this.netForce.add(bForce);
+  console.log("depth", depth);
+
+  // console.log(bForce.length());
+
+  // adjust torque for inclination of the boat at the time
+  let t = new THREE.Vector3().copy(this.totalAngAlongBoat).multiplyScalar(-1 * this.totalAngOutBoat.y);
+  t.add(new THREE.Vector3().copy(this.totalAngOutBoat).multiplyScalar(this.totalAngAlongBoat.y));
+  t.multiplyScalar(bForce.length() * SceneParams.bTorqueMult);
+  // t.multiplyScalar(.5);
+  t.multiplyScalar(.01);
+  console.log(this.torque);
+  this.torque.add(t);
+  console.log("buoyant", t);
+
+  
+  // adjust torque for wave slope
+  let tAd = new THREE.Vector3(0,0,0).add(new THREE.Vector3(0,0,1).multiplyScalar(waterSlope.x));
+  tAd.add(new THREE.Vector3(-1,0,0).multiplyScalar(waterSlope.z));
+
+  let wF = new THREE.Vector3().crossVectors(tAd,new THREE.Vector3(0,1,0));
+  console.log(this.netForce);
+  this.netForce.add(wF.multiplyScalar(10));
+  console.log(wF);
+  tAd.multiplyScalar(SceneParams.waveTorque);
+
+  // console.log(this.torque);
+  this.torque.add(tAd);
+  console.log("tadd", tAd);
 }
 
 // Apply a uniform force due to gravity
 Boat.prototype.applyGravity = function () {
   const GRAVITY = SceneParams.GRAVITY * 50;
 
-  this.netForce.add(new THREE.Vector3(0, -1 * GRAVITY * this.mass, 0));
+  let forc = new THREE.Vector3(0, -1 * GRAVITY * this.mass, 0);
 
+  if (SceneParams.fancyGround && SceneParams.fancyBuoyancy) {
+    forc.multiplyScalar(.2);
+    this.netForce.add(forc);
+  }
 };
 
 Boat.prototype.applyKeelForce = function () {

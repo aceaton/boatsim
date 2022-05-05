@@ -25,45 +25,56 @@
 // Params:
 // * width: int - the width of the planar section
 // * height: int - the height of the planar section
-function plane1(width, height) {
-  console.log("plane1");
-  return function(u, v, vec) {
+function plane1(width, height, derivative) {
+  // console.log("plane1");
+  return function (u, v, vec) {
     let x = u * width - width / 2;
     let z = v * height - height / 2;
     let y = -249;
     // if (SceneParams.waveOnX && SceneParams.waveOnZ) {
     //   y += SceneParams.waveHeight*Math.sin(x/SceneParams.waveWidth + z/SceneParams.waveWidth + time/SceneParams.waveFreq);
     // }
-    if (SceneParams.waveOnX) {
-      y += SceneParams.waveHeight*Math.sin(x/SceneParams.waveWidth +time/SceneParams.wavePdX);
+    if (!derivative) {
+      if (SceneParams.waveOnX) {
+        y += SceneParams.waveHeight * Math.sin(x / SceneParams.waveWidth + time / SceneParams.wavePdX);
+      }
+      if (SceneParams.waveOnZ) {
+        y += SceneParams.waveHeight * Math.sin(z / SceneParams.waveWidth + time / SceneParams.wavePdZ);
+      }
     }
-    if (SceneParams.waveOnZ) {
-      y += SceneParams.waveHeight*Math.sin(z/SceneParams.waveWidth +time/SceneParams.wavePdZ);
+    else {
+      // TAKES COS NOT SIN TO FIND SLOPE IN ORDER TO APPLY TORQUE BASED ON WAVE SLOPE AT BOAT
+      if (SceneParams.waveOnX) {
+        x = SceneParams.waveHeight /SceneParams.waveWidth * Math.cos(x / SceneParams.waveWidth + time / SceneParams.wavePdX);
+      }
+      if (SceneParams.waveOnZ) {
+        z = SceneParams.waveHeight  /SceneParams.waveWidth* Math.cos(z / SceneParams.waveWidth + time / SceneParams.wavePdZ);
+      }
     }
     // console.log(time);
-    if (time%3000 === 0) {
+    // if (time%3000 === 0) {
     // // console.log(x/SceneParams.waveWidth);
     // console.log(time/SceneParams.wavePd);
     // console.log(x/SceneParams.waveWidth);
-    }
-    
+    // }
+
     vec.set(x, y, z);
     // console.log(vec);
   };
-  
+
 }
 
 // Our modified cloth - the cloth is a triangle between points p1,p2,p3.
 // Let mast be the vector between p2 and p1. v is the distance along the mast from p1, and u is the distance perpendicular to the mast in the p3 direction
-function triangle(p1,p2,p3) {
+function triangle(p1, p2, p3) {
   // v is the distance from the top down
   // u is the distance from the mast out towards p3
-  return function(u,v,vec) {
+  return function (u, v, vec) {
     // console.log(u,v);
-    let mast = new THREE.Vector3().subVectors(p2,p1);
-    let p3p1 = new THREE.Vector3().subVectors(p3,p1);
+    let mast = new THREE.Vector3().subVectors(p2, p1);
+    let p3p1 = new THREE.Vector3().subVectors(p3, p1);
     let dotted = mast.clone().multiplyScalar(mast.dot(p3p1));
-    let perp = new THREE.Vector3().subVectors(p3p1,dotted);
+    let perp = new THREE.Vector3().subVectors(p3p1, dotted);
 
     vec = p1.clone().add(mast.multiplyScalar(v).add(perp.multiplyScalar(u)));
   };
@@ -74,14 +85,14 @@ function triangle(p1,p2,p3) {
 // using the u,v coordinates in a plane.
 // let initParameterizedPosition = plane(500,500);
 // TODO DEFINE INITIAL LOCATION OF THE CLOTH
-let corner1 = new THREE.Vector3(-250,125,-250);
-let corner2 = new THREE.Vector3(-250,125,250);
-let corner3 = new THREE.Vector3(250,125,-250);
+let corner1 = new THREE.Vector3(-250, 125, -250);
+let corner2 = new THREE.Vector3(-250, 125, 250);
+let corner3 = new THREE.Vector3(250, 125, -250);
 
 // let initParameterizedPosition = triangle(corner1,corner2,corner3);
-let initParameterizedPosition = function(u,v,vec) {
+let initParameterizedPosition = function (u, v, vec) {
   let pos = new THREE.Vector3();
-  let ang = SceneParams.sailAngle/180*Math.PI;
+  let ang = SceneParams.sailAngle / 180 * Math.PI;
   // let p1 = new THREE.Vector3(SceneParams.p1x,SceneParams.p1y,SceneParams.p1z);
   let d = SceneParams.d;
   let h = SceneParams.sailHeight;
@@ -90,17 +101,17 @@ let initParameterizedPosition = function(u,v,vec) {
   // console.log(ang);
   // pos.addVectors(p1,new THREE.Vector3(u*w/d*Math.cos(ang),-v*h/d,u*w/d*Math.sin(ang)));
   // console.log(pos);
-  vec.set(SceneParams.p1x+u*w/d*Math.cos(ang),SceneParams.p1y-v*h/d,SceneParams.p1z+u*w/d*Math.sin(ang));
+  vec.set(SceneParams.p1x + u * w / d * Math.cos(ang), SceneParams.p1y - v * h / d, SceneParams.p1z + u * w / d * Math.sin(ang));
 }
 
 
-  var initWaterParameterizedPosition = plane1(SceneParams.waterWidth, SceneParams.waterHeight);//plane1(500,500);
+var initWaterParameterizedPosition = plane1(SceneParams.waterWidth, SceneParams.waterHeight, false);//plane1(500,500);
 
 
 function liftCoeff(angleDegrees) {
   let d = angleDegrees;
   if (d <= 16) return 0;
-  return .004266*d**4 -.10058*d**3 + 1.426*d**2 - 10.54*d + 28.64 - .0001160 * d**5 +.000002075*d**6 - 2.433e-8*d**7 + 1.800e-10*d**8 - 7.626e-13*d**9 + 1.412e-15*d**10;
+  return .004266 * d ** 4 - .10058 * d ** 3 + 1.426 * d ** 2 - 10.54 * d + 28.64 - .0001160 * d ** 5 + .000002075 * d ** 6 - 2.433e-8 * d ** 7 + 1.800e-10 * d ** 8 - 7.626e-13 * d ** 9 + 1.412e-15 * d ** 10;
 }
 
 
@@ -111,7 +122,7 @@ function Constraint(p1, p2, distance) {
   this.distance = distance; // Desired distance
 }
 
-Constraint.prototype.enforce = function() {
+Constraint.prototype.enforce = function () {
   // ----------- STUDENT CODE BEGIN ------------
   // Enforce this constraint by applying a correction to the two particles'
   // positions based on their current distance relative to their desired rest
@@ -120,13 +131,13 @@ Constraint.prototype.enforce = function() {
   // this.p1.previous = this.p1.position;
   // this.p2.previous = this.p2.position;
   // console.log(this.p1,this.p2);
-  var vAB = new THREE.Vector3(0,0,0);
+  var vAB = new THREE.Vector3(0, 0, 0);
   vAB.subVectors(this.p2.position, this.p1.position);
   // console.log(vAB);
   let l = vAB.length();
   var diff = l - this.distance;
-  var vCorr = new THREE.Vector3(0,0,0);
-  vCorr = vAB.multiplyScalar(.5*diff/l);
+  var vCorr = new THREE.Vector3(0, 0, 0);
+  vCorr = vAB.multiplyScalar(.5 * diff / l);
   // console.log(vCorr);
   this.p1.addForce(vCorr.multiplyScalar(SceneParams.springStrength));
   this.p2.addForce(vCorr.multiplyScalar(-1));
@@ -156,7 +167,7 @@ function Cloth(w, h, l) {
   // Internal helper function for computing 1D index into particles list
   // from a particle's 2D index
   function index(u, v) {
-    return (v * (v+1))/2 + u;
+    return (v * (v + 1)) / 2 + u;
     // return u + v * (w + 1);
   }
   this.index = index;
@@ -179,7 +190,7 @@ function Cloth(w, h, l) {
     for (let u = 0; u <= v; u++) {
       // let pos = new THREE.Vector3();
       // initParametrizedPosition(u,v,pos);
-      particles.push(new Particle(u,v,0,SceneParams.MASS));
+      particles.push(new Particle(u, v, 0, SceneParams.MASS));
       // particles.push(new Particle(p1.x+u*width/w, p1.y-v*height/h, 0, SceneParams.MASS));
     }
   }
@@ -187,43 +198,43 @@ function Cloth(w, h, l) {
   // Add constraints
   for (let v = 0; v <= h; v++) {
     for (let u = 0; u <= v; u++) {
-      
+
       if (u < v) {
         // constraints on the direct vertical edges
         constraints.push(
-          new Constraint(particles[index(u,v)],particles[index(u,v-1)],SceneParams.restDistance*SceneParams.restDistanceV)
+          new Constraint(particles[index(u, v)], particles[index(u, v - 1)], SceneParams.restDistance * SceneParams.restDistanceV)
         );
         // console.log(index(u,v),index(u,v-1));
-        if (u < v-1) {
+        if (u < v - 1) {
           // constraints on the ne/sw diagonal edges
           constraints.push(
-            new Constraint(particles[index(u,v)],particles[index(u+1,v-1)],SceneParams.restDistance*SceneParams.restDistanceS)
+            new Constraint(particles[index(u, v)], particles[index(u + 1, v - 1)], SceneParams.restDistance * SceneParams.restDistanceS)
           );
         }
       }
-      
+
       if (u > 0) {
         // constraints on the direct horizontal edges
         constraints.push(
-          new Constraint(particles[index(u,v)],particles[index(u-1,v)],SceneParams.restDistance*SceneParams.restDistanceH)
+          new Constraint(particles[index(u, v)], particles[index(u - 1, v)], SceneParams.restDistance * SceneParams.restDistanceH)
         );
         // constraints on the nw/se diagonal edges
         constraints.push(
-          new Constraint(particles[index(u,v)],particles[index(u-1,v-1)],SceneParams.restDistance*SceneParams.restDistanceS)
+          new Constraint(particles[index(u, v)], particles[index(u - 1, v - 1)], SceneParams.restDistance * SceneParams.restDistanceS)
         );
       }
-      
-      if (u < v-1) {
+
+      if (u < v - 1) {
         // constraints on double horizontal edges
         constraints.push(
-          new Constraint(particles[index(u,v)],particles[index(u+2,v)],SceneParams.restDistance*SceneParams.restDistanceB*SceneParams.restDistanceH)
+          new Constraint(particles[index(u, v)], particles[index(u + 2, v)], SceneParams.restDistance * SceneParams.restDistanceB * SceneParams.restDistanceH)
         );
         // console.log(particles.length, index(u,v), index(u+2, v), index(u,v-2));
         // constraints on double vertical edges
         constraints.push(
-          new Constraint(particles[index(u,v)],particles[index(u,v-2)],SceneParams.restDistance*SceneParams.restDistanceB*SceneParams.restDistanceV)
+          new Constraint(particles[index(u, v)], particles[index(u, v - 2)], SceneParams.restDistance * SceneParams.restDistanceB * SceneParams.restDistanceV)
         );
-      } 
+      }
     }
   }
 
@@ -249,13 +260,13 @@ function Cloth(w, h, l) {
     document.addEventListener("keydown", handleImpactEvents, false);
     // ----------- STUDENT CODE END ------------
     Cloth.eventHandlerRegistered = true;
-    
+
   }
 }
 
 // Return the Particle that the mouse cursor is currently hovering above,
 // or return null if the cursor is not over the canvas.
-Cloth.prototype.getLookedAtParticle = function() {
+Cloth.prototype.getLookedAtParticle = function () {
   // Shoot a ray into the scene and see what it hits, just like in A3!
   let intersects = Renderer.raycaster.intersectObjects(Scene.scene.children);
 
@@ -296,11 +307,11 @@ function handleImpactEvents(event) {
 
   // The vectors tom which each key code in this handler maps. (Change these if you like)
   const keyMap = {
-    ArrowUp: new THREE.Vector3(0,  1,  0),
-    ArrowDown: new THREE.Vector3(0,  -1,  0),
-    ArrowLeft: new THREE.Vector3(-1,  0,  0),
-    ArrowRight: new THREE.Vector3(1,  0,  0),
-};
+    ArrowUp: new THREE.Vector3(0, 1, 0),
+    ArrowDown: new THREE.Vector3(0, -1, 0),
+    ArrowLeft: new THREE.Vector3(-1, 0, 0),
+    ArrowRight: new THREE.Vector3(1, 0, 0),
+  };
 
   // The magnitude of the offset produced by this impact.
   // this number was chosen to look well in the absence of gravity.
@@ -320,7 +331,7 @@ function handleImpactEvents(event) {
   // console.log(event.key);
 
   // ----------- Our reference solution uses 8 lines of code.
-  var offset = new THREE.Vector3(0,0,0);
+  var offset = new THREE.Vector3(0, 0, 0);
   var importantKey = false;
   if (event.key in keyMap) {
     offset = keyMap[event.key];
@@ -331,12 +342,12 @@ function handleImpactEvents(event) {
     let s = 100;
     var parts = cloth.particles;
     for (let i = 0; i < parts.length; i++) {
-      parts[i].position.z += Math.random()*s*2 - s;
+      parts[i].position.z += Math.random() * s * 2 - s;
     }
   }
 
-  if (!importantKey) {return;}
-  
+  if (!importantKey) { return; }
+
   var part = cloth.getLookedAtParticle();
   offset.multiplyScalar(scale);
 
@@ -352,7 +363,7 @@ function handleImpactEvents(event) {
 // ***************************************************************
 
 // Apply a uniform force due to gravity to all particles in the cloth
-Cloth.prototype.applyGravity = function() {
+Cloth.prototype.applyGravity = function () {
   let particles = this.particles;
   const GRAVITY = SceneParams.GRAVITY;
   // ----------- STUDENT CODE BEGIN ------------
@@ -360,7 +371,7 @@ Cloth.prototype.applyGravity = function() {
   // ----------- Our reference solution uses 4 lines of code.
   for (let i = 0; i < particles.length; i++) {
     particles[i].addForce(
-      new THREE.Vector3(0,-1*GRAVITY*particles[i].mass,0)
+      new THREE.Vector3(0, -1 * GRAVITY * particles[i].mass, 0)
     );
   }
   // ----------- STUDENT CODE END ------------
@@ -374,10 +385,10 @@ Cloth.prototype.applyGravity = function() {
 // Params:
 // * amplitude: Number - the amplitude of oscillation (in units)
 // * frequency: Number - the frequency of oscillation (in Hz/2pi)
-Cloth.prototype.applyWave = function(amplitude, frequency) {
+Cloth.prototype.applyWave = function (amplitude, frequency) {
   let f = frequency / 1000;
   let y = amplitude * Math.sin(f * time);
-  let offset = new THREE.Vector3(0,y,0);
+  let offset = new THREE.Vector3(0, y, 0);
 
   // Move the last row of cloth up and down.
   for (let i = 0; i <= this.w; i++) {
@@ -400,7 +411,7 @@ Cloth.prototype.applyWave = function(amplitude, frequency) {
 // * windStrength: number - the strength of the wind. Larger = stronger wind.
 //        The precise implementation details of how to use this parameter are
 //        intentionally left for you to decide upon.
-Cloth.prototype.applyWind = function(windStrength) {
+Cloth.prototype.applyWind = function (windStrength) {
   let particles = this.particles;
   // ----------- STUDENT CODE BEGIN ------------
   // Here are some dummy values for a relatively boring wind.
@@ -417,11 +428,11 @@ Cloth.prototype.applyWind = function(windStrength) {
   let windAngle = SceneParams.windDirection * (Math.PI / 180);
   let windDir = new THREE.Vector3(1, 0, 0);
   let axisAngle = new THREE.Vector3(0, 1, 0);
-  windDir.applyAxisAngle(axisAngle, -1*windAngle);
-  let windForce = windDir.normalize().multiplyScalar(windStrength/100);
+  windDir.applyAxisAngle(axisAngle, -1 * windAngle);
+  let windForce = windDir.normalize().multiplyScalar(windStrength / 100);
 
   // ----------- Our reference solution uses 6 lines of code.
-  let newStrength = Math.sin(time/1000)*10;
+  let newStrength = Math.sin(time / 1000) * 10;
   // console.log(newStrength);
   let st = 10;
   // windForce.multiplyScalar(newStrength);
@@ -444,9 +455,9 @@ Cloth.prototype.applyWind = function(windStrength) {
     particles[face.c].addForce(tmpForce);
   }
 
-  let angNew = (SceneParams.sailAngle/180-.5)*Math.PI;
-  let dir = new THREE.Vector3(Math.cos(angNew),0,Math.sin(angNew));
-  if (dir.dot(new THREE.Vector3(1,0,0))<0){
+  let angNew = (SceneParams.sailAngle / 180 - .5) * Math.PI;
+  let dir = new THREE.Vector3(Math.cos(angNew), 0, Math.sin(angNew));
+  if (dir.dot(new THREE.Vector3(1, 0, 0)) < 0) {
     dir.multiplyScalar(-1);
   }
   dir.normalize();
@@ -458,7 +469,7 @@ Cloth.prototype.applyWind = function(windStrength) {
     relativeAng *= -1;
   }
   // console.log(relativeAng);
-  let lift = liftCoeff(relativeAng)*SceneParams.windStrength**2/10000*SceneParams.liftC*SceneParams.sailHeight*SceneParams.sailWidth/2;
+  let lift = liftCoeff(relativeAng) * SceneParams.windStrength ** 2 / 10000 * SceneParams.liftC * SceneParams.sailHeight * SceneParams.sailWidth / 2;
   // console.log(lift);
   let liftForce = new THREE.Vector3().copy(dir).multiplyScalar(lift)
   // console.log(liftForce);
@@ -481,7 +492,7 @@ Cloth.prototype.applyWind = function(windStrength) {
 // Params:
 // * strength: number - a scalar multiplier for the strength of raindrop impact
 // * rate: number - the number of raindrop impacts to simulate in a given frame
-Cloth.prototype.applyRain = function(strength, rate) {
+Cloth.prototype.applyRain = function (strength, rate) {
   let particles = this.particles;
 
   // (1) For each of the `rate` raindrops,
@@ -492,17 +503,17 @@ Cloth.prototype.applyRain = function(strength, rate) {
 
   // ----------- Our reference solution uses 21 lines of code.
   for (let i = 0; i < rate; i++) {
-    let u = Math.floor(Math.random()*(this.w-1))+1;
-    let v = Math.floor(Math.random()*(this.h-1))+1;
-    this.particles[this.index(u,v)].position.y -= strength;
-    this.particles[this.index(u+1,v)].position.y -= strength/2;
-    this.particles[this.index(u-1,v)].position.y -= strength/2;
-    this.particles[this.index(u,v+1)].position.y -= strength/2;
-    this.particles[this.index(u,v-1)].position.y -= strength/2;
-    this.particles[this.index(u+1,v+1)].position.y -= strength/3;
-    this.particles[this.index(u-1,v+1)].position.y -= strength/3;
-    this.particles[this.index(u+1,v-1)].position.y -= strength/3;
-    this.particles[this.index(u-1,v-1)].position.y -= strength/3;
+    let u = Math.floor(Math.random() * (this.w - 1)) + 1;
+    let v = Math.floor(Math.random() * (this.h - 1)) + 1;
+    this.particles[this.index(u, v)].position.y -= strength;
+    this.particles[this.index(u + 1, v)].position.y -= strength / 2;
+    this.particles[this.index(u - 1, v)].position.y -= strength / 2;
+    this.particles[this.index(u, v + 1)].position.y -= strength / 2;
+    this.particles[this.index(u, v - 1)].position.y -= strength / 2;
+    this.particles[this.index(u + 1, v + 1)].position.y -= strength / 3;
+    this.particles[this.index(u - 1, v + 1)].position.y -= strength / 3;
+    this.particles[this.index(u + 1, v - 1)].position.y -= strength / 3;
+    this.particles[this.index(u - 1, v - 1)].position.y -= strength / 3;
   }
   // ----------- STUDENT CODE END ------------
 }
@@ -517,15 +528,15 @@ Cloth.prototype.applyRain = function(strength, rate) {
 // Params:
 // * strength: number - a strength parameter. Use it however you like, or ignore it!
 // * rate: number - a rate parameter. Use it however you like, or ignore it!
-Cloth.prototype.applyCustom = function(strength, rate) {
-  
+Cloth.prototype.applyCustom = function (strength, rate) {
+
   // ----------- STUDENT CODE END ------------
 }
 
 // Wrapper function that calls each of the other force-related
 // functions, if applicable. Additional forces in the simulation
 // should be added here.
-Cloth.prototype.applyForces = function() {
+Cloth.prototype.applyForces = function () {
   if (SceneParams.gravity) {
     this.applyGravity();
   }
@@ -543,7 +554,7 @@ Cloth.prototype.applyForces = function() {
   // }
 };
 
-Cloth.prototype.update = function(deltaT,com) {
+Cloth.prototype.update = function (deltaT, com) {
   if (!SceneParams.integrate) return;
   let particles = this.particles;
   // ----------- STUDENT CODE BEGIN ------------
@@ -552,18 +563,18 @@ Cloth.prototype.update = function(deltaT,com) {
   // ----------- Our reference solution uses 3 lines of code.
 
   // aggregate force and torque from sail points of contact
-  let fTot = new THREE.Vector3(0,0,0);
-  let tTot = new THREE.Vector3(0,0,0);
+  let fTot = new THREE.Vector3(0, 0, 0);
+  let tTot = new THREE.Vector3(0, 0, 0);
 
   for (let i = 0; i < particles.length; i++) {
     let f = particles[i].integrate(deltaT);
     if (f != null) {
-      let disp = new THREE.Vector3().subVectors(particles[i].position,com);
+      let disp = new THREE.Vector3().subVectors(particles[i].position, com);
       tTot.add(disp.cross(f));
       fTot.add(f);
     }
   }
-  return [fTot,tTot];
+  return [fTot, tTot];
   // ----------- STUDENT CODE END ------------
 };
 
@@ -571,12 +582,12 @@ Cloth.prototype.update = function(deltaT,com) {
 // *                 Collisions & Constraints
 // ***************************************************************
 
-Cloth.prototype.handleCollisions = function() {
+Cloth.prototype.handleCollisions = function () {
   let particles = this.particles;
 
-  let floor  = Scene.ground;
+  let floor = Scene.ground;
   let sphere = Scene.sphere;
-  let box    = Scene.box;
+  let box = Scene.box;
   // ----------- STUDENT CODE BEGIN ------------
   // For each particle in the cloth, call the appropriate function(s)
   // for handling collisions with various objects.
@@ -591,7 +602,7 @@ Cloth.prototype.handleCollisions = function() {
   // ----------- STUDENT CODE END ------------
 };
 
-Cloth.prototype.enforceConstraints = function() {
+Cloth.prototype.enforceConstraints = function () {
   let constraints = this.constraints;
   // ----------- STUDENT CODE BEGIN ------------
   // Enforce all constraints in the cloth.
@@ -603,7 +614,7 @@ Cloth.prototype.enforceConstraints = function() {
 };
 
 
-Cloth.prototype.createConstraintLinesInScene = function() {
+Cloth.prototype.createConstraintLinesInScene = function () {
   let constraints = this.constraints;
   let group = new THREE.Group();
   // create constraint lines if not already created
@@ -651,7 +662,7 @@ Cloth.prototype.createConstraintLinesInScene = function() {
 //           For example, two adjacent particles may end up each in a different
 //           bin, and we'd like to make sure they don't intersect either.
 //           Find a creative way of resolving these corner cases.
-Cloth.prototype.handleSelfIntersections = function() {
+Cloth.prototype.handleSelfIntersections = function () {
 
   let particles = this.particles;
 
@@ -659,18 +670,18 @@ Cloth.prototype.handleSelfIntersections = function() {
   // ----------- Our reference solution uses 20 lines of code.
   for (let i = 0; i < particles.length; i++) {
     for (let j = 0; j < particles.length; j++) {
-      if (i!==j) {
-      let d = new THREE.Vector3(0,0,0);
-      d.subVectors(particles[i].position,particles[j].position);
-      let thresh = cloth.restDistance;
-      if (d.length() < thresh) {
-        // console.log(d.length());
-        let dif  = thresh-d.length();
-        d.normalize().multiplyScalar(dif/2);
-        particles[i].position.add(d);
-        particles[j].position.sub(d);
+      if (i !== j) {
+        let d = new THREE.Vector3(0, 0, 0);
+        d.subVectors(particles[i].position, particles[j].position);
+        let thresh = cloth.restDistance;
+        if (d.length() < thresh) {
+          // console.log(d.length());
+          let dif = thresh - d.length();
+          d.normalize().multiplyScalar(dif / 2);
+          particles[i].position.add(d);
+          particles[j].position.sub(d);
+        }
       }
-    }
     }
   }
   // ----------- STUDENT CODE END ------------

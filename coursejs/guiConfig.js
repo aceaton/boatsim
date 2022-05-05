@@ -102,6 +102,58 @@ GuiConfig.defs = [
     name: "torque on",
     param: "torqueOn",
    },
+   {
+    folderName: "Physics",
+    name: "lift coefficient multiplier",
+    param: "liftC",
+    range: [0.0001,.001,0.0001],
+   },
+   {
+    folderName: "Physics",
+    name: "water density",
+    param: "waterDensity",
+    range: [0.000001,.00001,0.000001],
+   },
+   {
+    folderName: "Physics",
+    name: "torque multiplier",
+    param: "torqueMult",
+    range: [0.0000005,.000002,0.0000001],
+   },
+   {
+    folderName: "Physics",
+    name: "accel multiplier",
+    param: "accelMult",
+    range: [1,20,8],
+   },
+   {
+    folderName: "Physics",
+    name: "Rot inertia",
+    param: "rotInertia",
+    range: [10,500,10],
+   },
+   {
+    folderName: "Physics",
+    name: "gravity",
+    param: "gravity",
+   },
+   {
+    folderName: "Physics",
+    name: "Advanced buoyancy",
+    param: "fancyBuoyancy",
+   },
+   {
+    folderName: "Physics",
+    name: "current (drift)",
+    param: "slip",
+    range: [0.0001,.1,0.0001],
+   },
+   {
+    folderName: "Physics",
+    name: "wave torque",
+    param: "waveTorque",
+    range: [0,50000000,10000],
+   },
    
 
    /***************************************************
