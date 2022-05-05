@@ -28,13 +28,14 @@ Scene.init = function() {
   // Now fill the scene with objects
   Scene.ground = Scene.buildGround();
   Scene.cloth  = Scene.buildCloth();
-  Scene.mast  = Scene.buildMast();
-  Scene.boom = Scene.buildBoom();
+  // Scene.mast  = Scene.buildMast();
+  // Scene.boom = Scene.buildBoom();
   Scene.sphere = Scene.buildSphere();
   Scene.box    = Scene.buildBox();
-  Scene.arrow = Scene.buildArrow();
+  Scene.arrow = Scene.buildArrow(0);
+  Scene.arrow = Scene.buildArrow(SceneParams.windDirection);
   Scene.boat = Scene.buildBoat();
-  Scene.keel = Scene.buildKeel();
+  // Scene.keel = Scene.buildKeel();
 
   Scene.update();
 }
@@ -348,6 +349,9 @@ Scene.buildMast = function() {
 }
 
 Scene.buildBoat = function() {
+  var boatGeo = {};
+  boatGeo.meshes = [];
+
   let mainHullGeo = {};
   mainHullGeo.meshes = [];
   mainHullGeo.centerwidth = 163;
@@ -362,7 +366,9 @@ Scene.buildBoat = function() {
   mainHullGeo.geometry.rotateY(Math.PI);
   mainHullGeo.geometry.translate((mainHullGeo.mainLength / 2),0,0);
   mainHullGeo.geometry.rotateY(-Math.PI/180*SceneParams.boatAngle);
-  mainHullGeo.material = new THREE.MeshPhongMaterial({
+  
+  // mainHullGeo.material = ;
+  let mat = new THREE.MeshPhongMaterial({
     color: 0x333333,//0xffffff,
     specular: 0x111111,
     shininess: 100,
@@ -370,14 +376,14 @@ Scene.buildBoat = function() {
     opacity: 0.15, // clipping is an issue, so set a low opacity
   });
 
-  let mainHull = new THREE.Mesh(mainHullGeo.geometry, mainHullGeo.material);
+  let mainHull = new THREE.Mesh(mainHullGeo.geometry);
   mainHull.position.x = 0;
   mainHull.position.z = 0;
   mainHull.position.y = -249 + 140;
-  mainHull.receiveShadow = true;
-  mainHull.castShadow = true;
-  mainHullGeo.meshes.push(mainHull);
-  Scene.scene.add(mainHull);
+  // mainHull.receiveShadow = true;
+  // mainHull.castShadow = true;
+  boatGeo.meshes.push(mainHull);
+  // Scene.scene.add(mainHull);
 
   // the bow
 
@@ -390,17 +396,78 @@ Scene.buildBoat = function() {
   bowGeo.rotateY(-Math.PI/180*SceneParams.boatAngle);
   
   
-  let bow = new THREE.Mesh(bowGeo, mainHullGeo.material);
+  let bow = new THREE.Mesh(bowGeo);
   bow.position.x = 0;
   bow.position.z = 0;
   bow.position.y = -249 + 140;
   bow.receiveShadow = true;
   bow.castShadow = true;
-  mainHullGeo.meshes.push(bow);
-  mainHull.add(bow);
-  Scene.scene.add(bow);
+  boatGeo.meshes.push(bow);
+  // mainHull.add(bow);
+  // Scene.scene.add(bow);
 
-  return [mainHullGeo,bowGeo];
+  let mastGeo = {};
+  mastGeo.height = 630;
+  mastGeo.meshes = [];
+  mastGeo.geometry = new THREE.BoxGeometry(10, mastGeo.height, 5);
+  // Position the poles on the "floor" of their coordinate space
+  mastGeo.geometry.translate(0,630/2,0);
+
+
+  let mast = new THREE.Mesh(mastGeo.geometry);
+  mast.position.x = 0;
+  mast.position.z = 0;
+  mast.position.y = -249 + 120;
+  mast.receiveShadow = true;
+  mast.castShadow = true;
+  boatGeo.meshes.push(mast);
+  // Scene.scene.add(mast);
+
+  let boomGeo = {};
+  boomGeo.length = 240;
+  boomGeo.meshes = [];
+  boomGeo.geometry = new THREE.BoxGeometry(boomGeo.length, 10, 5);
+  boomGeo.geometry.translate((240/2),-100,0);
+  boomGeo.geometry.rotateY(-SceneParams.sailAngle/180*Math.PI);
+  
+  let boom = new THREE.Mesh(boomGeo.geometry);
+  boom.position.x = 0;
+  boom.position.z = 0;
+  boom.position.y = -10 + 120;
+  // console.log(SceneParams.sailAngle);
+  // console.log(SceneParams.sailAngle/180*Math.PI);
+
+  boom.receiveShadow = true;
+  boom.castShadow = true;
+  boatGeo.meshes.push(boom);
+
+  let keelGeo = {};
+  keelGeo.meshes = [];
+  keelGeo.length = 120;
+  keelGeo.width = 70;
+  keelGeo.depth = 5;
+  keelGeo.geometry = new THREE.BoxGeometry(keelGeo.width, keelGeo.length, keelGeo.depth);
+  keelGeo.geometry.rotateY(Math.PI/2);
+
+  let keel = new THREE.Mesh(keelGeo.geometry);
+  keel.position.x = 0;
+  keel.position.z = 100;
+  keel.position.y = -249 - 60;
+  keel.receiveShadow = true;
+  keel.castShadow = true;
+  boatGeo.meshes.push(keel);
+
+  var singleGeo = new THREE.Geometry();
+  for (var m of boatGeo.meshes){
+    m.updateMatrix();
+    singleGeo.merge(m.geometry,m.matrix);
+  }
+  var singleMesh = new THREE.Mesh(singleGeo, mat);
+  singleMesh.receiveShadow = true;
+  singleMesh.castShadow = true;
+  Scene.scene.add(singleMesh);
+
+  return singleMesh;
 
 }
 
@@ -432,13 +499,13 @@ Scene.buildKeel = function() {
 
 }
 
-Scene.buildArrow = function() {
+Scene.buildArrow = function(ang) {
   let arrow = {};
   arrow.length = 100;
   arrow.meshes = [];
   arrow.geometry = new THREE.BoxGeometry(arrow.length, 10, 5);
   arrow.geometry.translate(-200, -0, 0);
-  arrow.geometry.rotateY(SceneParams.windDirection*(Math.PI/180));
+  arrow.geometry.rotateY(-1*ang*(Math.PI/180));
   arrow.material = new THREE.MeshPhongMaterial({
     color: 0xee0000,//0xffffff,
     specular: 0x888888,//0x111111,
@@ -551,13 +618,13 @@ Scene.createConstraintLine = function(constraint) {
 }
 
 Scene.showWireframe = function(flag) {
-  Scene.boom.material.wireframe = flag;
-  Scene.mast.material.wireframe = flag;
+  // Scene.boom.material.wireframe = flag;
+  // Scene.mast.material.wireframe = flag;
   Scene.cloth.material.wireframe = flag;
   Scene.sphere.material.wireframe = flag;
   Scene.box.material.wireframe = flag;
-  Scene.boat[0].material.wireframe = flag;
-  Scene.keel.material.wireframe = flag; 
+  Scene.boat.material.wireframe = flag;
+  // Scene.keel.material.wireframe = flag; 
   // Scene.boat[1].material.wireframe = flag;
 }
 

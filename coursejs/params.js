@@ -74,6 +74,7 @@ class Params {
     // position of the COM relative to the origin (in the direction of boat angle)
     this.boatCOM = new THREE.Vector3(-100,-249+140,0);
     this.boatCOMx = -100;
+    // this.boatCOMy = -109;
     this.boatCOMy = -109;
     this.boatMass = 10;
 
@@ -81,14 +82,15 @@ class Params {
 
     this.waterDensity = .00001;
 
-    this.torqueMult = .000000005;
+    this.torqueMult = .000001;//.000000005;
 
     this.accelMult = 8;//5000;
 
-    this.slip = .05;
+    this.slip = .0005;
     // current
 
-    this.torqueOn = false;
+    this.torqueOn = true;
+    this.rotInertia = 100;
 
     // ====================================================================
 
@@ -108,7 +110,7 @@ class Params {
 
     this.wind = false; // Should the wind force be enabled?
     this.windStrength = 30; // scalar multiplier for wind force magnitude
-    this.windDirection = 45; // where the wind is coming from. THREE.Vector3(1,0,0) (directly down from north) is 0 for reference. 
+    this.windDirection = 0; // where the wind is coming from. THREE.Vector3(1,0,0) (directly down from north) is 0 for reference. 
 
     this.rain = false; // Should the rain impulse be enabled?
     this.rainStrength = 6; // scalar multiplier for rain impulse magnitude

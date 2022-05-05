@@ -10,8 +10,6 @@ function Boat(cloth) {
   boatLoc.applyAxisAngle(axis, -1*SceneParams.boatAngle/180*Math.PI);
   console.log(boatLoc);
 
-  // total amount of torque ever applied to boat - lets us see water submersion
-  this.totalAng = new THREE.Vector3(0,0,0);
 
   this.origin = new THREE.Vector3().copy(boatLoc);
   // center of mass
@@ -19,6 +17,10 @@ function Boat(cloth) {
   this.previous = new THREE.Vector3().copy(boatLoc);
 
   this.ang = new THREE.Vector3(boatLoc.x,0,boatLoc.z);
+  this.angVel = new THREE.Vector3(0,0,0);
+
+  // total amount of torque ever applied to boat - lets us see water submersion
+  this.totalAng = new THREE.Vector3(0,0,0).copy(this.ang);
 
   this.cloth = cloth;
 
@@ -27,7 +29,8 @@ function Boat(cloth) {
 }
 
 Boat.prototype.translate = function(tr) {
-  let toRot = [Scene.boat[0].geometry,Scene.boat[1],Scene.mast.geometry,Scene.boom.geometry];
+  // let toRot = [Scene.boat[0].geometry,Scene.boat[1],Scene.mast.geometry,Scene.boom.geometry];
+  let toRot = [Scene.boat.geometry];
   for (obj of toRot) {
       // console.log(obj);
       obj.translate(tr.x,tr.y,tr.z);
@@ -50,12 +53,13 @@ Boat.prototype.translate = function(tr) {
 }
 
 Boat.prototype.rotate = function(rot) {
-  let toRot = [Scene.boat[0].geometry,Scene.boat[1],Scene.mast.geometry,Scene.boom.geometry];
+  // let toRot = [Scene.boat[0].geometry,Scene.boat[1],Scene.mast.geometry,Scene.boom.geometry];
+  let toRot = [Scene.boat.geometry];
   let neg = new THREE.Vector3().copy(this.position).multiplyScalar(-1);
   let ang1 = new THREE.Vector3().copy(rot);
-  let xang = ang1.dot(new THREE.Vector3(1,0,0))*SceneParams.torqueMult;
-  let yang = ang1.dot(new THREE.Vector3(0,1,0))*SceneParams.torqueMult;
-  let zang = ang1.dot(new THREE.Vector3(0,0,1))*SceneParams.torqueMult;
+  let xang = ang1.dot(new THREE.Vector3(1,0,0));
+  let yang = ang1.dot(new THREE.Vector3(0,1,0));
+  let zang = ang1.dot(new THREE.Vector3(0,0,1));
   let mag = ang1.length();
   ang1.normalize();
   
@@ -71,10 +75,12 @@ Boat.prototype.rotate = function(rot) {
   for (particle of this.cloth.particles) {
       if (particle.locked == true) {
           particle.position.add(neg);
-          particle.position.applyAxisAngle(ang1,mag*SceneParams.torqueMult);
+          particle.position.applyAxisAngle(ang1,mag);
           particle.position.add(this.position);
       }
   }
+
+  this.totalAng.applyAxisAngle(ang1,mag);
   // rotoate cloth (only bound bits)
 }
 
@@ -122,9 +128,15 @@ let tr = new THREE.Vector3().subVectors(this.position, this.previous);
 this.translate(tr);
 //   console.log(tr);
 
+// apply verlet integration but with angular momentum
 if (SceneParams.torqueOn) {  
-  this.totalAng.add(this.torque);
-  this.rotate(this.torque);
+  var t = new THREE.Vector3().copy(this.angVel);
+  t.multiplyScalar(1-DAMPING);
+  t.add(this.torque.multiplyScalar(SceneParams.torqueMult*deltaT*deltaT/SceneParams.rotInertia));
+
+  this.rotate(t);
+
+  this.angVel = t;
 
   this.torque = new THREE.Vector3(0,0,0);
 }
@@ -167,4 +179,6 @@ Boat.prototype.applyKeelForce = function() {
   let keelForce = dir.multiplyScalar(f.dot(dir)*(1-SceneParams.slip));
   f.sub(keelForce);
   // console.log(dir);
+
+
 }

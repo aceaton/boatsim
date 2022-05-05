@@ -394,7 +394,7 @@ Cloth.prototype.applyWind = function(windStrength) {
   let windAngle = SceneParams.windDirection * (Math.PI / 180);
   let windDir = new THREE.Vector3(1, 0, 0);
   let axisAngle = new THREE.Vector3(0, 1, 0);
-  windDir.applyAxisAngle(axisAngle, windAngle);
+  windDir.applyAxisAngle(axisAngle, -1*windAngle);
   let windForce = windDir.normalize().multiplyScalar(windStrength/100);
 
   // ----------- Our reference solution uses 6 lines of code.
@@ -402,7 +402,7 @@ Cloth.prototype.applyWind = function(windStrength) {
   // console.log(newStrength);
   let st = 10;
   // windForce.multiplyScalar(newStrength);
-  windForce.x *= Math.sin(time/1000)*st;
+  // windForce.x *= Math.sin(time/1000)*st;
   // windForce.y *= Math.sin(time/340)*st;
   // windForce.z *= Math.sin(time/534)*st;
 
@@ -419,6 +419,20 @@ Cloth.prototype.applyWind = function(windStrength) {
     particles[face.a].addForce(tmpForce);
     particles[face.b].addForce(tmpForce);
     particles[face.c].addForce(tmpForce);
+  }
+
+  let angNew = (SceneParams.sailAngle/180-.5)*Math.PI;
+  let dir = new THREE.Vector3(Math.cos(angNew),0,Math.sin(angNew));
+  dir.normalize();
+  // WILL HAVE TO CHANGE WITH ANGLE PIVOT - TO DO
+
+  let relativeAng = SceneParams.sailAngle + SceneParams.windDirection;
+  let lift = liftCoeff(relativeAng)*SceneParams.windStrength**2/10000*SceneParams.liftC*SceneParams.sailHeight*SceneParams.sailWidth/2;
+  let liftForce = new THREE.Vector3().copy(dir).multiplyScalar(lift)
+  // console.log(liftForce);
+
+  for (let particle of particles) {
+    particle.addForce(liftForce);
   }
 };
 
@@ -472,22 +486,7 @@ Cloth.prototype.applyRain = function(strength, rate) {
 // * strength: number - a strength parameter. Use it however you like, or ignore it!
 // * rate: number - a rate parameter. Use it however you like, or ignore it!
 Cloth.prototype.applyCustom = function(strength, rate) {
-  let particles = this.particles;
-
-  // ----------- STUDENT CODE BEGIN ------------
-  // ----------- Our reference solution uses 36 lines of code.
-  let angNew = (SceneParams.sailAngle/180-.5)*Math.PI;
-  let dir = new THREE.Vector3(Math.cos(angNew),0,Math.sin(angNew));
-  dir.normalize();
-  // WILL HAVE TO CHANGE WITH ANGLE PIVOT - TO DO
-
-  let lift = liftCoeff(SceneParams.sailAngle)*SceneParams.windStrength**2/10000*SceneParams.liftC*SceneParams.sailHeight*SceneParams.sailWidth/2;
-  let liftForce = new THREE.Vector3().copy(dir).multiplyScalar(lift)
-  // console.log(liftForce);
-
-  for (let particle of particles) {
-    particle.addForce(liftForce);
-  }
+  
   // ----------- STUDENT CODE END ------------
 }
 

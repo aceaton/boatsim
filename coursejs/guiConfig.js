@@ -81,7 +81,7 @@ GuiConfig.defs = [
     folderName: "Forces",
     name: "wind strength",
     param: "windStrength",
-    range: [0,50,0.1],
+    range: [0,100,0.1],
   },
   {
     folderName: "Forces",
