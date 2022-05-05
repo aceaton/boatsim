@@ -160,7 +160,7 @@ Scene.buildWater = function() {
   // ground mesh
   ground.geometry = new THREE.ParametricGeometry(initWaterParameterizedPosition, SceneParams.waterSize, SceneParams.waterSize);
   // console.log(ground.geometry);
-  ground.m.updateMatrix();
+  // ground.m.updateMatrix();
   ground.mesh = new THREE.Mesh(ground.geometry, ground.material);
   // ground.mesh.position.y = SceneParams.groundY - 1;
   // ground.mesh.rotation.x = -Math.PI / 2;
@@ -519,7 +519,7 @@ Scene.buildBoat = function() {
   keel.castShadow = true;
   boatGeo.meshes.push(keel);
 
-  let coverGeo1 = new THREE.BoxGeometry(1, mainHullGeo.mainLength + 5, mainHullGeo.centerwidth*2 - 3);
+  let coverGeo1 = new THREE.BoxGeometry(1, mainHullGeo.mainLength, mainHullGeo.centerwidth*2 - 50);
   coverGeo1.rotateY(Math.PI);
   coverGeo1.rotateZ(Math.PI/2);
   coverGeo1.translate((mainHullGeo.mainLength / 2),0,0);

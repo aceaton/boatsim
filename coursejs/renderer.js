@@ -138,8 +138,12 @@ Renderer.render = function() {
   //       // console.log(vert);
   //   }
   // }
-    Scene.ground.geometry = new THREE.ParametricGeometry(initWaterParameterizedPosition, SceneParams.waterSize, SceneParams.waterSize);
-    console.log(Scene.ground.geometry.vertices[0]);
+    
+    let geo = new THREE.ParametricGeometry(initWaterParameterizedPosition, SceneParams.waterSize, SceneParams.waterSize);
+    for (let i = 0; i < Scene.ground.geometry.vertices.length; i++) {
+      Scene.ground.geometry.vertices[i].copy(geo.vertices[i]);
+    }
+    // console.log(Scene.ground.geometry.vertices[0]);
     Scene.ground.geometry.verticesNeedUpdate = true;
     Scene.ground.geometry.needsUpdate = true;
     Scene.ground.geometry.computeBoundingBox();

@@ -111,7 +111,8 @@ class Params {
 
     this.wave = false; // Should wave oscillations be enabled?
     this.waveAmp = 50; // Amplitude of wave oscillations (distance in units)
-    this.waveFreq = .1; // Frequency of wave oscillations (units are complicated, proportional to Hz)
+    this.wavePdX = 500; // Frequency of wave oscillations (units are complicated, proportional to Hz)
+    this.wavePdZ = 800;
 
     this.wind = true; // Should the wind force be enabled?
     this.windStrength = 30; // scalar multiplier for wind force magnitude
@@ -154,7 +155,7 @@ class Params {
 
     this.groundColor = 0x2F9FBF;//0x404761;    // base color of ground
     // this.groundSpecular = 0x404761; // reflection color of ground
-    this.groundEmissive = 0x000000; // emission color of ground
+    this.groundEmissive = 0x000040; // emission color of ground
 
     this.fogColor = 0xcce0ff;       // base color of fog
 

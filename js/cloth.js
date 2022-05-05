@@ -35,15 +35,16 @@ function plane1(width, height) {
     //   y += SceneParams.waveHeight*Math.sin(x/SceneParams.waveWidth + z/SceneParams.waveWidth + time/SceneParams.waveFreq);
     // }
     if (SceneParams.waveOnX) {
-      y += SceneParams.waveHeight*Math.sin(x/SceneParams.waveWidth +time/SceneParams.waveFreq);
+      y += SceneParams.waveHeight*Math.sin(x/SceneParams.waveWidth +time/SceneParams.wavePdX);
     }
     if (SceneParams.waveOnZ) {
-      y += SceneParams.waveHeight*Math.sin(z/SceneParams.waveWidth +time/SceneParams.waveFreq);
+      y += SceneParams.waveHeight*Math.sin(z/SceneParams.waveWidth +time/SceneParams.wavePdZ);
     }
     // console.log(time);
     if (time%3000 === 0) {
+    // // console.log(x/SceneParams.waveWidth);
+    // console.log(time/SceneParams.wavePd);
     // console.log(x/SceneParams.waveWidth);
-    // console.log(time/SceneParams.waveFreq + x/SceneParams.waveWidth);
     }
     
     vec.set(x, y, z);
@@ -92,9 +93,9 @@ let initParameterizedPosition = function(u,v,vec) {
   vec.set(SceneParams.p1x+u*w/d*Math.cos(ang),SceneParams.p1y-v*h/d,SceneParams.p1z+u*w/d*Math.sin(ang));
 }
 
-if (SceneParams.fancyGround) {
+
   var initWaterParameterizedPosition = plane1(SceneParams.waterWidth, SceneParams.waterHeight);//plane1(500,500);
-}
+
 
 function liftCoeff(angleDegrees) {
   let d = angleDegrees;
@@ -531,15 +532,15 @@ Cloth.prototype.applyForces = function() {
   if (SceneParams.wind) {
     this.applyWind(SceneParams.windStrength);
   }
-  if (SceneParams.rain) {
-    this.applyRain(SceneParams.rainStrength, SceneParams.rainRate);
-  }
-  if (SceneParams.wave) {
-    this.applyWave(SceneParams.waveAmp, SceneParams.waveFreq);
-  }
-  if (SceneParams.customForce) {
-    this.applyCustom(SceneParams.customFStrength, SceneParams.customFRate);
-  }
+  // if (SceneParams.rain) {
+  //   this.applyRain(SceneParams.rainStrength, SceneParams.rainRate);
+  // }
+  // if (SceneParams.wave) {
+  //   this.applyWave(SceneParams.waveAmp, SceneParams.waveFreq);
+  // }
+  // if (SceneParams.customForce) {
+  //   this.applyCustom(SceneParams.customFStrength, SceneParams.customFRate);
+  // }
 };
 
 Cloth.prototype.update = function(deltaT,com) {

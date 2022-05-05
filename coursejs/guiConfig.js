@@ -66,63 +66,98 @@ GuiConfig.defs = [
    folderName: "Boat",
    name: "Boat angle",
    param: "boatAngle",
+   range: [0,180,1],
+   onChange: Scene.update,
   },
   {
    folderName: "Boat",
    name: "Sail angle",
    param: "sailAngle",
+   range: [0,180,1],
+   onChange: Scene.update,
   },
   {
-    folderName: "Forces",
+    folderName: "Boat",
+    name: "Boat X COM (x displacement)",
+    param: "boatCOMx",
+    range: [-200,-50,1],
+   },
+   {
+    folderName: "Boat",
+    name: "Boat Y COM (y displacement)",
+    param: "boatCOMx",
+    range: [-200,-50,1],
+   },
+   {
+    folderName: "Boat",
+    name: "Boat mass",
+    param: "boatMass",
+    range: [0,100,1],
+   },
+   /***************************************************
+   *             Physics folder
+   ***************************************************/
+   {
+    folderName: "Physics",
+    name: "torque on",
+    param: "torqueOn",
+   },
+   
+
+   /***************************************************
+   *             Wind folder
+   ***************************************************/
+  {
+    folderName: "Wind",
     name: "wind",
     param: "wind",
   },
   {
-    folderName: "Forces",
+    folderName: "Wind",
     name: "wind strength",
     param: "windStrength",
     range: [0,100,0.1],
   },
   {
-    folderName: "Forces",
+    folderName: "Wind",
     name: "wind direction",
     param: "windDirection",
     range: [0,359,1],
   },
-  {
-    folderName: "Forces",
-    name: "rain",
-    param: "rain",
-  },
-  {
-    folderName: "Forces",
-    name: "rain strength",
-    param: "rainStrength",
-    range: [0,50,0.1],
-  },
-  {
-    folderName: "Forces",
-    name: "rain rate",
-    param: "rainRate",
-    range: [0,50,1],
-  },
-  {
-    folderName: "Forces",
-    name: "custom",
-    param: "customForce",
-  },
-  {
-    folderName: "Forces",
-    name: "custom strength",
-    param: "customFStrength",
-    range: [0,50,0.1],
-  },
-  {
-    folderName: "Forces",
-    name: "custom rate",
-    param: "customFRate",
-    range: [0,50,1],
-  },
+  // {
+  //   folderName: "Forces",
+  //   name: "rain",
+  //   param: "rain",
+  // },
+  // {
+  //   folderName: "Forces",
+  //   name: "rain strength",
+  //   param: "rainStrength",
+  //   range: [0,50,0.1],
+  // },
+  // {
+  //   folderName: "Forces",
+  //   name: "rain rate",
+  //   param: "rainRate",
+  //   range: [0,50,1],
+  // },
+  // {
+  //   folderName: "Forces",
+  //   name: "custom",
+  //   param: "customForce",
+  // },
+  // {
+  //   folderName: "Forces",
+  //   name: "custom strength",
+  //   param: "customFStrength",
+  //   range: [0,50,0.1],
+  // },
+  // {
+  //   folderName: "Forces",
+  //   name: "custom rate",
+  //   param: "customFRate",
+  //   range: [0,50,1],
+  // },
   /***************************************************
    *             Scene folder
    ***************************************************/
@@ -157,66 +192,125 @@ GuiConfig.defs = [
   /***************************************************
    *             Behavior folder
    ***************************************************/
+  // {
+  //   folderName: "Behavior",
+  //   name: "structural",
+  //   param: "structuralSprings",
+  //   onChange: Sim.restartCloth,
+  // },
+  // {
+  //   folderName: "Behavior",
+  //   name: "shear",
+  //   param: "shearSprings",
+  //   onChange: Sim.restartCloth,
+  // },
+  // {
+  //   folderName: "Behavior",
+  //   name: "bending",
+  //   param: "bendingSprings",
+  //   onChange: Sim.restartCloth,
+  // },
+  // {
+  //   folderName: "Behavior",
+  //   name: "show constraints",
+  //   param: "showConstraints",
+  //   onChange: Scene.update,
+  // },
+  // {
+  //   folderName: "Behavior",
+  //   name: "NoSelfIntersect",
+  //   param: "avoidClothSelfIntersection",
+  // },
+   /***************************************************
+   *             Wave folder
+   ***************************************************/
   {
-    folderName: "Behavior",
-    name: "structural",
-    param: "structuralSprings",
-    onChange: Sim.restartCloth,
-  },
-  {
-    folderName: "Behavior",
-    name: "shear",
-    param: "shearSprings",
-    onChange: Sim.restartCloth,
-  },
-  {
-    folderName: "Behavior",
-    name: "bending",
-    param: "bendingSprings",
-    onChange: Sim.restartCloth,
-  },
-  {
-    folderName: "Behavior",
-    name: "show constraints",
-    param: "showConstraints",
-    onChange: Scene.update,
-  },
-  {
-    folderName: "Behavior",
-    name: "NoSelfIntersect",
-    param: "avoidClothSelfIntersection",
-  },
-  {
-   folderName: "Behavior",
+   folderName: "Wave",
    name: "wave",
-   param: "wave",
-   onChange: Scene.update,
+   param: "fancyGround",
+  //  onChange: Scene.update,
   },
   {
-   folderName: "Behavior",
-   name: "wave amplitude",
-   param: "waveAmp",
-   range: [0,100,1],
-  },
+    folderName: "Wave",
+    name: "waveX",
+    param: "waveOnX",
+   },
+   {
+    folderName: "Wave",
+    name: "waveZ",
+    param: "waveOnZ",
+   },
+   {
+    folderName: "Wave",
+    name: "wave Z period",
+    param: "wavePdZ",
+    range: [100,1000,10],
+   },
+   {
+    folderName: "Wave",
+    name: "wave X period",
+    param: "wavePdX",
+    range: [100,1000,10],
+   },
+
+  // {
+  //  folderName: "Wave",
+  //  name: "wave amplitude",
+  //  param: "waveAmp",
+  //  range: [0,100,1],
+  // },
+  // {
+  //  folderName: "Wave",
+  //  name: "wave frequency",
+  //  param: "waveFreq",
+  //  range: [0.5,50,0.5],
+  // },
   {
-   folderName: "Behavior",
-   name: "wave frequency",
-   param: "waveFreq",
-   range: [0.5,50,0.5],
-  },
+    folderName: "Wave",
+    name: "Wave height",
+    param: "waveHeight",
+    range: [0,50,0.5],
+   },
+   {
+    folderName: "Wave",
+    name: "wave width",
+    param: "waveWidth",
+    range: [0.5,10,0.1],
+   },
+   {
+    folderName: "Wave",
+    name: "wave resolution",
+    param: "waterSize",
+    range: [50,1000,10],
+   },
+   {
+    folderName: "Wave",
+    name: "water width",
+    param: "waterWidth",
+    range: [10000,100000,10],
+   },{
+    folderName: "Wave",
+    name: "water height",
+    param: "waveWidth",
+    range: [10000,100000,10],
+   },
+
+
+
+
   /***************************************************
    *             Appearance folder
    ***************************************************/
    {
      folderName: "Appearance",
-     name: "cloth color",
+     name: "sail color",
      param: "clothColor",
      type: "color",
      onChange: Scene.update,
    },
    {
      folderName: "Appearance",
-     name: "cloth reflection",
+     name: "sail reflection",
      param: "clothSpecular",
      type: "color",
      onChange: Scene.update,
@@ -269,11 +363,11 @@ GuiConfig.defs = [
    /***************************************************
     *             Top level
     ***************************************************/
-   {
-     name: "Restart simulation",
-     param: "restartCloth",
-     onClick: Sim.restartCloth,
-   },
+  //  {
+  //    name: "Restart simulation",
+  //    param: "restartCloth",
+  //    onClick: Sim.init,
+  //  },
    {
      name: "Restore defaults",
      param: "restoreDefaults",
